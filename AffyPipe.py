@@ -2,7 +2,7 @@
 Program that automatically runs Affymetrix APT and SNPolisher programs for MAC and Linux users.
 Original version: Ezequiel L. Nicolazzi (Fondazione Parco Tecnologico Padano, Italy), March 2014.
 Changes:
-   -May 2014 (ELN): Excluded summary info of default. Direct MAP name. Gzips most output files
+   -May 2014 (ELN): Excluded summary info of default. Direct MAP name.
                     Included editing of SNP probe classes for PLINK format.
                 
 For bug report/comments: ezequiel.nicolazzi@tecnoparco.org
