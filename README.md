@@ -12,7 +12,7 @@ Users are strongly adviced to read carefully Affymetrix's "Axiom genotyping solu
 The fastest and more clever way of getting this pipeline and all accessory files is installing git and cloning this repository.
 Further information on how to install git on Linux and Mac can be found at: http://git-scm.com/book/en/Getting-Started-Installing-Git . An example of cloning command using command line is: 
 
-% git clone --recursive https://github.com/bioinformatics-ptp/AffyPipe.git
+% git clone --recursive https://github.com/nicolazzie/AffyPipe.git
 
 The AffyPipe pipeline is for users running **Linux/Unix** and **Mac** operative systems, and only runs over 64bit processors. **Windows users should use Gentoyping Console (TM) Software, which already cover all of these functionalities!!!** 
 You should have Python (2.x) and R (any version?) already installed on your computer (Mac users have python already installed by default). The whole pipeline was thoroughly tested under Python 2.7.6 and R 3.0.
