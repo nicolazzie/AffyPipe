@@ -1,7 +1,6 @@
 AffyPipe: _an open-source pipeline for Affymetrix Axiom genotyping workflow on livestock species_
 =========
-ref: E.L. Nicolazzi (Fondazione Parco Tecnologico Padano) - Via Einstein, Loc. Cascina Codazza (26900) Lodi (Italy).
-     email: ezequiel [dot] nicolazzi [at] tecnoparco [dot] org
+*ref: E.L. Nicolazzi (Fondazione Parco Tecnologico Padano) - Via Einstein, Loc. Cascina Codazza (26900) Lodi (Italy). Email: ezequiel [dot] nicolazzi [at] tecnoparco [dot] org*
 
 
 The goal of this pipeline is to authomatize Affymetrix's genotyping workflow for Linux and Mac users: from Power tools (APTools) to SNPolisher R package.
