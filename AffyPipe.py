@@ -123,7 +123,9 @@ else:logit('%-30s %-s' % ('Summary genotyping files:','NOT REQUIRED'))
 # Checks PLINK and edit options
 if opt.PLINK:
     logit('%-30s %-s' % ('Genotype file format:','PLINK'))
-    if opt.EDITPLINK=='PMNx':logit('%-30s %-s' % ('Retain SNP probe class:','P + M + N'))
+    if opt.EDITPLINK=='PMNx':
+        oplink=['P','M','N']
+        logit('%-30s %-s' % ('Retain SNP probe class:','P + M + N'))
     else:
         oplink=[opt.EDITPLINK[x] for x in range(len(opt.EDITPLINK))]
         logit('%-30s %-s' % ('Retain SNP probe class:', ' + '.join(oplink)))
