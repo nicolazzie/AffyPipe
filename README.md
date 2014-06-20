@@ -1,11 +1,11 @@
-AffyPipe: _an open-source pipeline for Affymetrix Axiom genotyping workflow on livestock species_
+AffyPipe: _an open-source pipeline for Affymetrix Axiom genotyping workflow_
 =========
 *ref: E.L. Nicolazzi (Fondazione Parco Tecnologico Padano) - Via Einstein, Loc. Cascina Codazza (26900) Lodi (Italy). Email: ezequiel [dot] nicolazzi [at] tecnoparco [dot] org*
 
 
-The goal of this pipeline is to authomatize Affymetrix's genotyping workflow for Linux and Mac users: from Power tools (APTools) to SNPolisher R package.
+The goal of this pipeline is to authomatize Affymetrix's standard (STD) and bestpractice (BP) genotyping workflow for Linux and Mac users: from Power tools (APTools) to SNPolisher R package.
 This is a one-step tool that combines all Affymetrix software and produces edited and user-friendly format output files. In fact, AffyPipe allows you to edit SNP probe classes directly while exporting genotypes in PLINK format (Purcel et al, 2007).
-It was originally built for the **International Buffalo Genome Consortium** (Iamartino, 2013), but can be easily modified to handle other species (e.g. cow, chichen, fisheries).
+It was originally built for the **International Buffalo Genome Consortium** (Iamartino, 2013), but now is able to handle all  species (e.g. cow, chichen, fisheries).
 Users are strongly adviced to read carefully Affymetrix's "Axiom genotyping solution data analysis guide" and "Best practice supplement to Axiom genotyping solution data analysis user guide" before using this tool. 
 
 ### **1) Getting the pipeline, and requirements**
@@ -18,41 +18,45 @@ The AffyPipe pipeline is for users running **Linux/Unix** and **Mac** operative 
 You should have Python (2.x) and R (any version?) already installed on your computer (Mac users have python already installed by default). The whole pipeline was thoroughly tested under Python 2.7.6 and R 3.0.
 
 ### **2) Folders and files required**
-The Affymetrix genotyping workflow requires several Affymetrix files to run. To help you through, all files were organized into two main folders.
-Below, default folder names are provided as example (note these names and values are also default in AffyPipe). 
-However, you can use your own folder names (see "Options" paragraph in Section 3).
+The Affymetrix genotyping workflow requires several Affymetrix files to run. For simplicity, all these files are expected to be placed into one folder.
+The default folder names and values specified below are provided as example. However, please note these names and values are also default in AffyPipe (see "Options" paragraph in Section 3).
 
 All Affymetrix files are downloadable at their website (http://www.affymetrix.com).
 Please remember that you need to register to be able to download all the files below!
-**NOTE: If you cloned or downloaded all the folders in this repository, you'll see example names of the files you need. All files are empty: i)to avoid copyright issues with Affymetrix and; ii) to force you downloading the latest version of all the files and softwares.**
+**NOTE: If you cloned or downloaded all the folders in this repository, you'll see example names of the files you need for the Buffalo species. All files are empty: i)to avoid copyright issues with Affymetrix and; ii) to force you downloading the latest version of all the files and softwares.**
 
- - **2.a)** _AFFYTOOLS_ folder: Nearly all data downloaded from Affymetrix website is placed here. Essentially 3 different files are needed (2.a.1, 2.a.2.1 and 2.a.2.2). 
+ - **2.a.)** _AFFYTOOLS_ folder: All data downloaded from Affymetrix website is placed here. Essentially 4 different files are needed (2.a.1, 2.a.2.1 + 2.a.2.2, and 2.a.3). 
   - **2.a.1)** Go to: Products > Microarray Solutions > DNA Analysis Solutions > Agrigenomics Solutions > Arrays > Species > Buffalo/[other species], and download the file under *Library Files* section.  For the buffalo it is **Axiom® Buffalo Analysis Files.r[X].zip**, for cow **Axiom_GW_bos_snp_1_r[X].zip**, where [X] stands for the version of the Analysis Files. Please uncompress this file and you'll get a lot of "Axiom_[species].[X].[blablabla] files.
   - **2.a.2)** Go to: Partners & Programs > Developers' Network > DevNet Tools. Inside there you'll find:
       - **2.a.2.1)** Affymetrix PowerTools (APTools): Here you should download the right file for your operative system (something like **APT[X] Linux 64 bit x86 binaries** or **APT [X] Mac OS-Lion 64-bit Intel Binaries**). Note: This pipeline was tested on both OSs. If you're using Mavericks OS, no worries, it will run ok. Please uncompress this folder (inside AFFYTOOLS, if you like).
       - **2.a.2.2)** **SNPolisher**: An R package for post-processing array's results. Please uncompress this folder (inside AFFYTOOLS, if you like).
-    
- - **2.b)** _AxiomReference_ folder: You will receive an annotation file from Affymetrix along with your genotypes. However, since data is updated constantly, the download of the latest annotation file is **STRONGLY** recommended. By doing this, even if you analyse samples in different times, you'll be sure of using the latest map information! You can find this in: Products > Microarray Solutions > DNA Analysis Solutions > Agrigenomics Solutions > Arrays > Species > Buffalo[/Bovine or other species]. There, under *Current NetAffx Annotation Files* section, download the file **Axiom_Buffalo Annotations, CSV format** (for buffalo) or **Axiom_GW_Bos_SNP_1.na[X].annot, CSV format** (for cow). Please remember to uncompress the file!
+  - **2.a.3)** Annotation file: You will receive an annotation file from Affymetrix along with your genotypes. However, since data is updated constantly, the download of the latest annotation file is **STRONGLY** recommended. By doing this, even if you analyse samples in different times, you'll be sure of using the latest map information! You can find this in: Products > Microarray Solutions > DNA Analysis Solutions > Agrigenomics Solutions > Arrays > Species > Buffalo[/Bovine or other species]. There, under *Current NetAffx Annotation Files* section, download the file **Axiom_Buffalo Annotations, CSV format** (for buffalo) or **Axiom_GW_Bos_SNP_1.na[X].annot, CSV format** (for cow). Please remember to uncompress the file and put it inside AFFYTOOLS folder.
  
- - **2.c)** *a CEL list file*: All Affymetrix Power Tools programs need a file containing a list of CEL files (raw data) to be analysed. Fortunately, using AffyPipe you will have to do this just once! It is highly recommended that you provide also the full path to the .CEL files. Just remember that *CEL list files* need a compulsary header row: "cel_files". If such header is missing, AffyPipe will stop, since APTools programs cannot run without that header!. 
+ - **2.b)** *a CEL list file*: All Affymetrix Power Tools programs need a file containing a list of CEL files (raw data) to be analysed. Fortunately, using AffyPipe you will have to do this just once! It is highly recommended that you provide also the full path to the .CEL files. Just remember that *CEL list files* need a compulsary header row: "cel_files". If such header is missing, AffyPipe will stop, since APTools programs cannot run without that header!. 
 To help you here, a small bash program called "createcelfile.sh" is also provided. The program *actually creates* the CEL list files for you. You only have to place this program in the directory where the .CEL files are stored, and run it. This creates a "mycellistfile.txt" file (your CEL list file!), that you can rename and put wherever you want (e.g. in the main folder?).
 To run this program:
 
-% chmod 755 createcelfile.sh && ./createcelfile.sh 
+      % chmod 755 createcelfile.sh && ./createcelfile.sh 
 
-A short explanation for those not used to command line: **chmod 755 createcelfile.sh** means that you are giving all access rights (read/write/execute) to your user + read/execute rights to all other users. You actually need to do this just once!; **&&** means something like "after you have succeeded doing the thing on the left, do the thing on the right"; **./createcelfile.sh** this command actually launches the program.  
+    A short explanation for those not used to command line: **chmod 755 createcelfile.sh** means that you are giving all access rights (read/write/execute) to your user + read/execute rights to all other users. You actually need to do this just once!; **&&** means something like "after you have succeeded doing the thing on the left, do the thing on the right"; **./createcelfile.sh** this command actually launches the program.  
 
-Once you have finished, if you named the folders same as I did, you should have:
+ - **2.c)** *a PARAM_species.inp file*: This file is already provided, and you should NOT change the name of the file! However, you need to edit it, based on the array/species you're going to analyse. Thanks to this file, AffyPipe can be used by any species genotyped with Affymetrix Axiom technology! **Please note that testing has been carried out only on Buffalo + Human Exome 319 and EUR Axiom datasets (GEO platforms: GPL18760 and GPL52691).** In this file you need to edit 3 parameters:
+    - *SPEC_prefix=* : This is the prefix of your species file. Search for the file "*apt-geno-qc.AximQC1.xml". Prefix is whatever comes before the first dot. For example: in "**Axiom_Buffalo**.r2.apt-geno-qc.AxiomQC1.xml", prefix is "Axiom_Buffalo""
+    - *SPEC_version=* : This is the release of the library. Usually is specified as "r[number]". For example: in "Axiom_Buffalo.**r2**.apt-geno-qc.AxiomQC1.xml", version is "r2".
+    - *SPEC_annotation=* : This is Affymetrix's annotation file for the selected species. PLEASE NOTE that this file should be placed in the AFFYTOOLS (or whatever you call it) directory!! E.g. MasterCsvAnnotationFile.r1.txt for buffalo (program will search this file as AFFYTOOLS/MasterCsvAnnotationFile.r1.txt)
+
+Once you have finished, if you named folders as default , you should have:
   - A main folder (where AffyPipe.py is)
-  - 2 sub-folders (AFFYTOOLS -**2.a.**- and AxiomReference -**2.b.**-).
-      - Inside AFFYTOOLS: A bunch of files + 2 folders (e.g. *SNPolisher_package* and *apt-[sometext_yourversion]*)
-      - Inside AxiomReference, just one SNP map file (uncompressed)
+  - 1 sub-folder (AFFYTOOLS -**2.a.**)
+      - A bunch of files (library) 
+      - 2 folders (e.g. *SNPolisher_package* and *apt-[sometext_yourversion]*)
+      - An annotation file (uncompressed)
   - A .CEL list file (somewhere... I place it usually in the main folder).
-  
+  - A PARAM_species.inp file (placed where AffyPipe.py is)
 
 ### **3) Running AffyPipe.py**
 
-The AffyPipe pipeline is very versatile, thanks to a number of options you can set up. The only parameter that is *compulsary* is the name (and path) of the cel list file (e.g. the one you created with createcelfile.sh). You can find a long explanation of AffyPipe options below in the "Option" section or a short and handy version by typing:
+The AffyPipe pipeline is very versatile, thanks to a number of options you can set up. Default behavior runs Affymetrix Standard workflow, but you can choose to perform "BestPractice" workflow (see "-b" option), that includes an extra PlateQC step (please see: "Best practice supplement to Axiom genotyping solution data analysis user guide" for further details). There are two *compulsary* information for Affypipe: 1) the name (and path) of the cel list file (e.g. the one you created with createcelfile.sh) and; 2) the parameter file (PARAM_species.inp). You can find a long explanation of AffyPipe options below in the "Option" section or a short and handy version by typing:
 
 % python AffyPipe.py -h
 
@@ -92,9 +96,6 @@ For newer versions, or if APTools folder is not in the default path, you can use
 **-s [PATH]** or **--SNPolisher=[PATH]** [DEFAULT: ./AFFYTOOLS/SNPolisher\_package]
 This option can be used to change the path and name of the folder where *SNPolisher_package.zip* files were uncompressed (see section 2.a.2.2 for further information).
 
-**-m [FILE]** or **--map=[FILE]** [DEFAULT: ./AxiomReference/Axiom\_Buffalo_Annotation.csv]
-This option can be used to change the path and name of the Annotation file. Download the **CSV format** file and uncompress it (see section 2.b for further information).
-
 **-o [PATH]** or **--outdir=[PATH]** [DEFAULT: ./OUTPUT]
 This option can be used to choose path and name of the output folder where all output files will be written. If the folder does not exists, a new folder will be created with the given name.
 
@@ -107,6 +108,22 @@ This option can be used to set a user defined call rate threshold. Default here 
 **-y** or **--summary** [DEFAULT: no summaries files]
 This option allows to output the summary information of the genotyping process. Please note that these files are VERY large. Since the general user does not usually uses this file, the default is not printing this out. However, there are several occasions where the analysis of this file could be useful, thus an option to output this file was included.
 
+**-b** or **--bestpractice** [DEFAULT: STANDARD workflow]
+This option enhances the Best Practice workflow, adding an extra step between the two apt-genotype steps, for plate QC. Please be sure of reading "Best practice supplement to Axiom genotyping solution data analysis user guide" before choosing this option. If this option is chosen, please note that plate information is VERY important. AffyPipe, by default, will assume plates from the CEL file name (usually original CEL file names contain plate information, so the program uses that information by default). This can be overridden by the -f or --platefile option (see below).
+
+**-f** or **--platefile** [DEFAULT: NONE] 
+This option is considered only if **-b** option is present. It allows to provide an extra file specifing plates for each of the samples. This file has to contain 2 columns, separated by comma or tab: first field has to be the name of the sample (e.g. exaclty as it is specified in the CEL list file, with or without the path, with or without the ".CEL" specification) and the second must be the plate ID.  Please note that you can simply copy the CEL list file and add a field naming plates. You can name plates any way you want, just be aware that names are case-sensitive, thus PLATE and plate are considered differently!
+For example, the following are all acceptable specification for 1 animal:
+ - */home/Affydata/animalnumber1.CEL  plate1* (note there is a tab separating both fields)
+ - */home/Affydata/animalnumber1.CEL,plate1*
+ - */home/Affydata/animalnumber1,plate1*
+ - */home/Affydata/animalnumber1  plate1* (note there is a tab separating both fields)
+ - *animalnumber1.CEL,plate1*
+ - *animalnumber1,plate1*
+
+**-l** or **--plateqc** [DEFAULT: 0.95,0.99] 
+This option is considered only if **-b** option is present. It allows to change Plate QC thresholds for PlatePassRate and AverageCallRate, respectively. Note that these values MUST BE comma separated, and both must be provided.
+
 **-p** or **--plink** [DEFAULT: no plink output]
 This option outputs (all) *BestProbeset* SNPs in PLINK format. The pipeline just goes through the Ps.performace.txt (output) file keeping genotypes of all probes classified as "1" in the "BestProbeset" field. Map file is created using SNP names (please read "Axiom genotyping solution data analysis guide" for further information).
 
@@ -117,6 +134,22 @@ The default option retains all SNP probesets that are classified as PolyHighReso
 
 **-q** or **--quiet** [DEFAULT: loud (it's an italian software! :) )]
 This option avoids showing runtime messages to stdout.
+
+#### *Examples*
+The following are just illustrative examples of commands to run the AffyPipe for typical situations. Please note that name files and paths are arbitrary (e.g. you should provide your own names/paths)
+
+  - Run a standard workflow, using default QC values and get genotypes on Affymetrix's standard format
+
+    % *python AffyPipe.py mycellistfile.txt*
+
+  - Run a standard workflow, use own QC values and get genotypes in PLINK format (default probe QC extraction).
+  
+    % *python AffyPipe.py mycellistfile.txt -d 0.90 -c 0.99 -p*
+    
+  - Run a "best practice" workflow, use own QC values (default plate setting) and get best probes for "PolyHighRes" and "MonoHighRes" classes in PLINK format. 
+    
+    % *python AffyPipe.py mycellistfile.txt -d 0.90 -c 0.99 -b -l 0.99,0.99 -p -e PM *
+
 
 #### *Output files and folders*
 Unless differently specified by the user, all output files will be written in a directory named OUTPUT, placed in the same directory where AffyPipe is run.
@@ -129,15 +162,28 @@ A number of files will be present in the OUTPUT folder, and most of them will be
  - **output folder**: This folder contains the output of the SNPolisher R package. You might want to have a look at the "Ps.performance.txt" file, which contains the summary of all the QC run on probes. For specific information on each of these files, please read Affymetrix's "Axiom genotyping solution data analysis guide" and "Best practice supplement to Axiom genotyping solution data analysis user guide". 
  - **Axiom_genotypes_PLINKfmt.[ped/map] (if requested)**: These files contain all SNP genotypes (choosing best probes for each SNP from "Ps.performance.txt") in PLINK format, recoding genotypes as: 0:'B/B', 1:'A/B', 2:'A/A','-1':'0/0'.
 
-### **4) Other species**
-The AffyPipe is intended for all livestock Axiom users, and coded following a general intention of expanding it to multi-species users. However, please note that this was built originally for the specific needs of the International Buffalo Genome Consortium (Iamartino et al.,2013). No CEL files for other species were available to us. Since *"In God we trust, all others bring data" (Deming)* rule applies, a specific option to switch to other species was not *directly* included. In any case, most probably you'll only have to modify just 2 (or 1?) line(s) of code, and that's it.
-So, if you're analysing a non-buffalo species, please contact the author of this pipeline at: ezequiel [dot] nicolazzi [at] tecnoparco [dot] org, and he'll be very happy to help you (and integrate the necessary changes in this tool!).
+### **4) Different species**
+The AffyPipe is intended for all species gentoyped with the Axiom technology, although it was originally built for the specific needs of the International Buffalo Genome Consortium (Iamartino et al.,2013). **Please note that testing has been carried out only on Buffalo + Human Exome 319 and EUR Axiom datasets (GEO platforms: GPL18760 and GPL52691).** Just by setting up the parameter file, you should be successful in using this tool on any other non-tested species. In case of problems, please contact the author of this pipeline at: ezequiel [dot] nicolazzi [at] tecnoparco [dot] org, and he'll be very happy to help you (and integrate the necessary changes in this tool!).
  
 ### **5) References**
 
- - Iamartino D, Williams JL, Sonstegard T, Reecy J, Van Tassell C, Nicolazzi EL, Biffani S, Biscarini F, Schroeder S, de Oliveira DAA, Coletta A, Garcia JF, Ali A, Ramunno L, Pasquariello R, Drummond MG, Bastianetto E, Fritz E, Knoltes J and the International Buffalo Consortium (2013). The buffalo genome and the application of genomics in animal management and Improvement. Buffalo Bulletin, Vol. 32, Spec. Issue 1, 2013, pp.151-158.
+  - Affymetrix, Genotyping solution analysis guide (2014). http://www.affymetrix.com/support/downloads/manuals/axiom_genotyping_solution_analysis_guide.pdf
+ 
+  - Affymetrix, Best practice analysis guide (2014). http://www.affymetrix.com/support/downloads/manuals/axiom_best_practice_supplement_user_guide.pdf
 
- - Purcell S, Neale B, Todd-Brown K, Thomas L, Ferreira MAR, Bender D, Maller J, Sklar P, de Bakker PIW, Daly MJ & Sham PC (2007) PLINK: a toolset for whole-genome association and population-based linkage analysis. American Journal of Human Genetics, 81.
+  - Iamartino D, Williams JL, Sonstegard T, Reecy J, Van Tassell C, Nicolazzi EL, Biffani S, Biscarini F, Schroeder S, de Oliveira DAA, Coletta A, Garcia JF, Ali A, Ramunno L, Pasquariello R, Drummond MG, Bastianetto E, Fritz E, Knoltes J and the International Buffalo Consortium (2013). The buffalo genome and the application of genomics in animal management and Improvement. Buffalo Bulletin, Vol. 32, Spec. Issue 1, 2013, pp.151-158.
+
+  - NCBI GEO, Platform GPL18760 (2014a). http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL18760
+
+  - NCBI GEO, Platform GPL52691 (2014b). http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE52691
+
+  - Purcell S, Neale B, Todd-Brown K, Thomas L, Ferreira MAR, Bender D, Maller J, Sklar P, de Bakker PIW, Daly MJ & Sham PC (2007) PLINK: a toolset for whole-genome association and population-based linkage analysis. American Journal of Human Genetics, 81.
+
+
+
+
+
+
 
 ### **Disclaimer**
 AffyPipe is a free tool that uses proprietary software that is publicly available online: you can redistribute this pipeline and/or modify this program, but at your own risk. AffyPipe is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details: http://www.gnu.org/licenses/.

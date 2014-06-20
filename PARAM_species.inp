@@ -1,0 +1,31 @@
+## This is a parameter file for the AffyPipe program. Follow the specifics below. 
+## Please specify the variables required (those that start by "SPEC_")
+## Only what comes after the "=" is retained, so include as many comments as you like.
+## NOTE: All lines beginning with "#" will be skipped!
+######
+## History:
+## Coded originally: Ezequiel L. Nicolazzi (Jun 2014)
+######
+
+### This is the prefix for the analysis files. Program will seek this prefix in your analyis folder.
+### E.g. search for the file "*apt-geno-qc.AximQC1.xml". Prefix is whatever comes before the first dot.
+###      For example: in "Axiom_Exome_1A.r2.apt-geno-qc.AxiomQC1.xml", prefix is "Axiom_Exome_1A"
+
+#SPEC_prefix= Axiom_Buffalo  
+#SPEC_prefix= Axiom_Exome_1A 
+#SPEC_prefix= Axiom_Exome319  
+SPEC_prefix= Axiom_KP_UCSF_EUR
+
+### This is the version of the library. Usually is specified as "r<number>". 
+### E.g. in the above exaple is whatever comes after the first dot, and before the second.
+
+#SPEC_version= r1
+#SPEC_version= r2
+SPEC_version= r7
+
+### This is Affymetrix's annotation file for the selected species. 
+### PLEASE NOTE that this file should be placed in "TOOLDIR" directory!!
+### E.g. Axiom_Exome319.na34.annot.csv 
+
+#SPEC_annotation= Axiom_Exome319.na34.annot.csv/Axiom_Exome319.na34.annot.csv
+SPEC_annotation= Axiom_GW_EUR.na34.annot.csv
