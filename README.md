@@ -12,7 +12,7 @@ Users are strongly adviced to read carefully Affymetrix's "Axiom genotyping solu
 The fastest and more clever way of getting this pipeline and all accessory files is installing git and cloning this repository.
 Further information on how to install git on Linux and Mac can be found at: http://git-scm.com/book/en/Getting-Started-Installing-Git . An example of cloning command using command line is: 
 
-% git clone --recursive https://github.com/nicolazzie/AffyPipe.git
+    % git clone --recursive https://github.com/nicolazzie/AffyPipe.git
 
 The AffyPipe pipeline is for users running **Linux/Unix** and **Mac** operative systems, and only runs over 64bit processors. **Windows users should use Gentoyping Console (TM) Software, which already cover all of these functionalities!!!** 
 You should have Python (2.x) and R (any version?) already installed on your computer (Mac users have python already installed by default). The whole pipeline was thoroughly tested under Python 2.7.6 and R 3.0.
@@ -36,7 +36,7 @@ Please remember that you need to register to be able to download all the files b
 To help you here, a small bash program called "createcelfile.sh" is also provided. The program *actually creates* the CEL list files for you. You only have to place this program in the directory where the .CEL files are stored, and run it. This creates a "mycellistfile.txt" file (your CEL list file!), that you can rename and put wherever you want (e.g. in the main folder?).
 To run this program:
 
-      % chmod 755 createcelfile.sh && ./createcelfile.sh 
+    % chmod 755 createcelfile.sh && ./createcelfile.sh 
 
     A short explanation for those not used to command line: **chmod 755 createcelfile.sh** means that you are giving all access rights (read/write/execute) to your user + read/execute rights to all other users. You actually need to do this just once!; **&&** means something like "after you have succeeded doing the thing on the left, do the thing on the right"; **./createcelfile.sh** this command actually launches the program.  
 
@@ -58,15 +58,15 @@ Once you have finished, if you named folders as default , you should have:
 
 AffyPipe is very versatile, thanks to a number of options you can set up. Default behavior runs Affymetrix Standard workflow, but you can choose to perform "Best Practice" workflow (see "-b" option), that includes an extra PlateQC step (please see: "Best practice supplement to Axiom genotyping solution data analysis user guide" for further details). There are two *compulsary* information for Affypipe: 1) the name (and path) of the cel list file (e.g. the one you created with createcelfile.sh) and; 2) the parameter file (PARAM_species.inp). You can find a long explanation of AffyPipe options below in the "Option" section or a short and handy version by typing:
 
-% python AffyPipe.py -h
+    % python AffyPipe.py -h
 
 or 
 
-% python AffyPipe.py --help
+    % python AffyPipe.py --help
 
 The general usage for the pipeline is:
  
-% python AffyPipe.py [options] [cel-list-file]
+    % python AffyPipe.py [options] [cel-list-file]
 
 For example, if:
   - You followed the instructions above, naming folders as in this readme;
@@ -76,7 +76,14 @@ For example, if:
 
 You can run the pipeline like this:
 
-% python AffyPipe.py /home/Affydata/mycellistfile.txt
+    % python AffyPipe.py /home/Affydata/mycellistfile.txt
+
+**NOTE:** The first time you run AffyPipe, please note that you have to have administrator permissions to allow AffyPipe install SNPolisher package. If you do not want an authomatic installation (or simply don't feel like giving "sudo" permissions to a script coded by someone else's), please install SNPolisher _prior_ to run AffyPipe with the following code (on your terminal, with admin permissions, write "R" and press enter, then write) :
+
+    % install.packages('[your path to file: SNPolisher[[version]].tar.gz]',repos=NULL,type='source')
+
+This command will install the package on your R library, so it will automatically recognize it!
+
 
 #### *Options*
 The AffyPipe pipeline is very flexible and user-friendly. 
@@ -138,18 +145,17 @@ This option avoids showing runtime messages to stdout.
 #### *Examples*
 The following are just illustrative examples of commands to run the AffyPipe for typical situations. Please note that name files and paths are arbitrary (e.g. you should provide your own names/paths)
 
-  - Run a standard workflow, using default QC values and get genotypes on Affymetrix's standard format
+1)Run a standard workflow, using default QC values and get genotypes on Affymetrix's standard format
 
-    % *python AffyPipe.py mycellistfile.txt*
+    % python AffyPipe.py mycellistfile.txt
 
-  - Run a standard workflow, use own QC values and get genotypes in PLINK format (default probe QC extraction).
+2)Run a standard workflow, use own QC values and get genotypes in PLINK format (default probe QC extraction).
   
-    % *python AffyPipe.py mycellistfile.txt -d 0.90 -c 0.99 -p*
+    % python AffyPipe.py mycellistfile.txt -d 0.90 -c 0.99 -p
     
-  - Run a "best practice" workflow, use own QC values (default plate setting) and get best probes for "PolyHighRes" and "MonoHighRes" classes in PLINK format. 
+3)Run a "best practice" workflow, use own QC values (default plate setting) and get best probes for "PolyHighRes" and "MonoHighRes" classes in PLINK format. 
     
-    % *python AffyPipe.py mycellistfile.txt -d 0.90 -c 0.99 -b -l 0.99,0.99 -p -e PM*
-
+    % python AffyPipe.py mycellistfile.txt -d 0.90 -c 0.99 -b -l 0.99,0.99 -p -e PM
 
 #### *Output files and folders*
 Unless differently specified by the user, all output files will be written in a directory named OUTPUT, placed in the same directory where AffyPipe is run.
