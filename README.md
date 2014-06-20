@@ -3,9 +3,9 @@ AffyPipe: _an open-source pipeline for Affymetrix Axiom genotyping workflow_
 *ref: E.L. Nicolazzi (Fondazione Parco Tecnologico Padano) - Via Einstein, Loc. Cascina Codazza (26900) Lodi (Italy). Email: ezequiel [dot] nicolazzi [at] tecnoparco [dot] org*
 
 
-The goal of this pipeline is to authomatize Affymetrix's standard (STD) and bestpractice (BP) genotyping workflow for Linux and Mac users: from Power tools (APTools) to SNPolisher R package.
+The goal of this pipeline is to authomatize Affymetrix's standard and "best practice" genotyping workflows for Linux and Mac users: from Power tools (APTools) to SNPolisher R package.
 This is a one-step tool that combines all Affymetrix software and produces edited and user-friendly format output files. In fact, AffyPipe allows you to edit SNP probe classes directly while exporting genotypes in PLINK format (Purcel et al, 2007).
-It was originally built for the **International Buffalo Genome Consortium** (Iamartino, 2013), but now is able to handle all  species (e.g. cow, chichen, fisheries).
+It was originally built for the **International Buffalo Genome Consortium** (Iamartino, 2013), but now is able to handle all species (e.g. human, cow, chichen, fisheries).
 Users are strongly adviced to read carefully Affymetrix's "Axiom genotyping solution data analysis guide" and "Best practice supplement to Axiom genotyping solution data analysis user guide" before using this tool. 
 
 ### **1) Getting the pipeline, and requirements**
@@ -43,8 +43,8 @@ To run this program:
  - **2.c)** *a PARAM_species.inp file*: This file is already provided, and you should NOT change the name of the file! However, you need to edit it, based on the array/species you're going to analyse. Thanks to this file, AffyPipe can be used by any species genotyped with Affymetrix Axiom technology! **Please note that testing has been carried out only on Buffalo + Human Exome 319 and EUR Axiom datasets (GEO platforms: GPL18760 and GPL52691).** In this file you need to edit 3 parameters:
     - *SPEC_prefix=* : This is the prefix of your species file. Search for the file "*apt-geno-qc.AximQC1.xml". Prefix is whatever comes before the first dot. For example: in "**Axiom_Buffalo**.r2.apt-geno-qc.AxiomQC1.xml", prefix is "Axiom_Buffalo""
     - *SPEC_version=* : This is the release of the library. Usually is specified as "r[number]". For example: in "Axiom_Buffalo.**r2**.apt-geno-qc.AxiomQC1.xml", version is "r2".
-    - *SPEC_annotation=* : This is Affymetrix's annotation file for the selected species. PLEASE NOTE that this file should be placed in the AFFYTOOLS (or whatever you call it) directory!! E.g. MasterCsvAnnotationFile.r1.txt for buffalo (program will search this file as AFFYTOOLS/MasterCsvAnnotationFile.r1.txt)
-
+    - *SPEC_annotation=* : This is Affymetrix's annotation file for the selected species. PLEASE NOTE that this file should be placed in the AFFYTOOLS (or whatever you call it) directory!! E.g. if "MasterCsvAnnotationFile.r1.txt" is speficied for buffalo, program will search for the file: AFFYTOOLS/MasterCsvAnnotationFile.r1.txt
+    
 Once you have finished, if you named folders as default , you should have:
   - A main folder (where AffyPipe.py is)
   - 1 sub-folder (AFFYTOOLS -**2.a.**)
@@ -56,7 +56,7 @@ Once you have finished, if you named folders as default , you should have:
 
 ### **3) Running AffyPipe.py**
 
-The AffyPipe pipeline is very versatile, thanks to a number of options you can set up. Default behavior runs Affymetrix Standard workflow, but you can choose to perform "BestPractice" workflow (see "-b" option), that includes an extra PlateQC step (please see: "Best practice supplement to Axiom genotyping solution data analysis user guide" for further details). There are two *compulsary* information for Affypipe: 1) the name (and path) of the cel list file (e.g. the one you created with createcelfile.sh) and; 2) the parameter file (PARAM_species.inp). You can find a long explanation of AffyPipe options below in the "Option" section or a short and handy version by typing:
+AffyPipe is very versatile, thanks to a number of options you can set up. Default behavior runs Affymetrix Standard workflow, but you can choose to perform "Best Practice" workflow (see "-b" option), that includes an extra PlateQC step (please see: "Best practice supplement to Axiom genotyping solution data analysis user guide" for further details). There are two *compulsary* information for Affypipe: 1) the name (and path) of the cel list file (e.g. the one you created with createcelfile.sh) and; 2) the parameter file (PARAM_species.inp). You can find a long explanation of AffyPipe options below in the "Option" section or a short and handy version by typing:
 
 % python AffyPipe.py -h
 
@@ -109,15 +109,15 @@ This option can be used to set a user defined call rate threshold. Default here 
 This option allows to output the summary information of the genotyping process. Please note that these files are VERY large. Since the general user does not usually uses this file, the default is not printing this out. However, there are several occasions where the analysis of this file could be useful, thus an option to output this file was included.
 
 **-b** or **--bestpractice** [DEFAULT: STANDARD workflow]
-This option enhances the Best Practice workflow, adding an extra step between the two apt-genotype steps, for plate QC. Please be sure of reading "Best practice supplement to Axiom genotyping solution data analysis user guide" before choosing this option. If this option is chosen, please note that plate information is VERY important. AffyPipe, by default, will assume plates from the CEL file name (usually original CEL file names contain plate information, so the program uses that information by default). This can be overridden by the -f or --platefile option (see below).
+This option enhances the Best Practice workflow, adding an extra step between the two apt-genotype steps, for plate QC. Please be sure of reading "Best practice supplement to Axiom genotyping solution data analysis user guide" before choosing this option. If this option is chosen, please note that **plate information is VERY important**. AffyPipe, by default, will obtian plate IDs from CEL file names (usually original CEL file names contain plate ID information, so the program uses that information by default). If your individual names are not containing such information, please be aware that this default behavior can be overridden by the -f or --platefile option (see below).
 
 **-f** or **--platefile** [DEFAULT: NONE] 
-This option is considered only if **-b** option is present. It allows to provide an extra file specifing plates for each of the samples. This file has to contain 2 columns, separated by comma or tab: first field has to be the name of the sample (e.g. exaclty as it is specified in the CEL list file, with or without the path, with or without the ".CEL" specification) and the second must be the plate ID.  Please note that you can simply copy the CEL list file and add a field naming plates. You can name plates any way you want, just be aware that names are case-sensitive, thus PLATE and plate are considered differently!
-For example, the following are all acceptable specification for 1 animal:
- - */home/Affydata/animalnumber1.CEL  plate1* (note there is a tab separating both fields)
+This option is considered only if **-b** option is present. It allows to provide an extra file specifing plates for each of the samples. This file has to contain 2 columns, separated by comma or tab (or a combination of two if you want to be extra-complicated!): first field has to be the name of the sample (e.g. exaclty as it is specified in the CEL list file, with or without the path, with or without the ".CEL" specification) and the second must be the plate ID. Please note that you can simply copy the CEL list file and add a field naming plates. You can name plates any way you want, just be aware that names are case-sensitive, thus PLATE and plate are considered as different plates!!
+For example, the following are all acceptable specifications for "animalnumber1":
+ - */home/Affydata/animalnumber1.CEL    plate1* (note there is a tab separating both fields)
  - */home/Affydata/animalnumber1.CEL,plate1*
  - */home/Affydata/animalnumber1,plate1*
- - */home/Affydata/animalnumber1  plate1* (note there is a tab separating both fields)
+ - */home/Affydata/animalnumber1    plate1* (note there is a tab separating both fields)
  - *animalnumber1.CEL,plate1*
  - *animalnumber1,plate1*
 
@@ -148,7 +148,7 @@ The following are just illustrative examples of commands to run the AffyPipe for
     
   - Run a "best practice" workflow, use own QC values (default plate setting) and get best probes for "PolyHighRes" and "MonoHighRes" classes in PLINK format. 
     
-    % *python AffyPipe.py mycellistfile.txt -d 0.90 -c 0.99 -b -l 0.99,0.99 -p -e PM *
+    % *python AffyPipe.py mycellistfile.txt -d 0.90 -c 0.99 -b -l 0.99,0.99 -p -e PM*
 
 
 #### *Output files and folders*
