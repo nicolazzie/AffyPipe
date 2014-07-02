@@ -8,12 +8,12 @@ Changes:
                     Added checks on user input of numbers and range.
                     Added some useful options in apt scripts
                     Now reading a param file to allow multiple-species analyses.
+   -Jul 2014 (ELN): Exclude collector lib.,specific to Python2.7 (doing the same, less fancier now)
 
 For bug report/comments: ezequiel.nicolazzi@tecnoparco.org
 """
 import sys,os,time
 from optparse import OptionParser
-from collections import Counter
 import subprocess as sub
 
 ################################################
@@ -158,6 +158,7 @@ if opt.BEST:
     for i in tut:animplate[i]=0
     if opt.Pfile:     ## IF Plate file is provided, get and retain individuals ID and plate links
         plates={}
+        temp=[]
         for line in open(opt.Pfile):
             if 'cel_files' in line:continue
             data=line.replace('\t',',')
@@ -168,12 +169,12 @@ if opt.BEST:
                 bomb('Individual: '+anim+' present in PLATE ID accessory file, but not in CEL list file!')
             pla=data[1].strip()
             animplate[anim]=pla
-            if not plates.has_key(pla):plates[pla]=1
-            else:plates[pla]+=1    
+            temp.append(pla)
+        plates=[(i,temp.count(i)) for i in set(temp)]
     else:             ## IF default behavior, get and retain individuals ID an plate links
         temp=[tut[i][:-4] for i in range(len(tut))]
         for en,i in enumerate(tut):animplate[i]=temp[en]
-        plates=Counter(temp)
+        plates=[(i,temp.count(i)) for i in set(temp)]
 
 # Print options and params
 logit('-'*81+'\n==> CEL FILE INFORMATION READ \n'+'-'*81)
@@ -183,7 +184,7 @@ if opt.BEST:
     logit('%-30s %-s' % ('Total # of individuals read:',len(tut)))
     logit('%-30s %-s' % ('Total # of plates identified:',len(plates)))
     logit('%-40s' % ('Specifically: (Plate#. PlateID: #individuals)'))
-    for en,it in enumerate(plates):logit('               Plate%s. %-s: %s' % (str(en+1),it,plates[it]))
+    for en,it in enumerate(plates):logit('               Plate%s. %-s: %s' % (str(en+1),it[0],it[1]))
 else:
     logit('%-30s %-s' % ('Total # of individuals read:',len(tut)))
 logit('')
@@ -428,13 +429,13 @@ if opt.BEST:
     ## Total #individuals by plate are stored in             : plates
     ## Total #individuals passing QCs by plate are stored in : c_plates (clean_plates)
     for en,plate in enumerate(plates):
-        PlatePR=round(100.*float(c_plates[plate])/float(plates[plate]),2)
-        AvgCR=round(sumCR[plate]/c_plates[plate],2)
+        PlatePR=round(100.*float(c_plates[plate[0]])/float(plate[1]),2)
+        AvgCR=round(sumCR[plate[0]]/c_plates[plate[0]],2)
         if PlatePR>=ppr and AvgCR>=acr:
-            if not goodP.has_key(plate):goodP[plate]=0
+            if not goodP.has_key(plate[0]):goodP[plate[0]]=0
         else:
             logit("[BAD NEWS]: Plate: %s DID NOT pass PlateQC (PlatePR: %s and AvgCR: %s) - Eliminating %s individuals" % \
-                  (plate,PlatePR,AvgCR,c_plates[plate]))
+                  (plate[0],PlatePR,AvgCR,c_plates[plate[0]]))
     skip=True
     for a in open(opt.DIROUT+'/celfile_DQClean_CRclean.txt'):
         if skip:
