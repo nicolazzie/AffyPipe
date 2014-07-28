@@ -8,6 +8,15 @@ This is a one-step tool that combines all Affymetrix software and produces edite
 It was originally built for the **International Buffalo Genome Consortium** (Iamartino, 2013), but now is able to handle all species (e.g. human, cow, chichen, fisheries).
 Users are strongly adviced to read carefully Affymetrix's "Axiom genotyping solution data analysis guide" and "Best practice supplement to Axiom genotyping solution data analysis user guide" before using this tool. 
 
+### **0) AffyPipe publication & how to cite**
+The AffyPipe publication can be found in: http://www.ncbi.nlm.nih.gov/pubmed/25028724
+
+If you used this pipeline for your analysis, please cite:
+
+Nicolazzie EL, Iamartino D, Williams JL (2014). AffyPipe: an open-source pipeline for Affymetrix Axiom genotyping workflow. Bioinformatics, DOI: 10.1093/bioinformatics/btu486 
+
+Thanks in advance!
+
 ### **1) Getting the pipeline, and requirements**
 The fastest and more clever way of getting this pipeline and all accessory files is installing git and cloning this repository.
 Further information on how to install git on Linux and Mac can be found at: http://git-scm.com/book/en/Getting-Started-Installing-Git . An example of cloning command using command line is: 
@@ -186,6 +195,8 @@ The AffyPipe is intended for all species gentoyped with the Axiom technology, al
   - Purcell S, Neale B, Todd-Brown K, Thomas L, Ferreira MAR, Bender D, Maller J, Sklar P, de Bakker PIW, Daly MJ & Sham PC (2007) PLINK: a toolset for whole-genome association and population-based linkage analysis. American Journal of Human Genetics, 81.
 
 
+### **6) Acknowledgments **
+This work was supported by the Italian Ministry of Education, University and Research, project GenHome [D.M. 505/Ric]; and the European Union's Seventh Framework Programme, project Gene2Farm [G.A. 289592].
 
 
 
