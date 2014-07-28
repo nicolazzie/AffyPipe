@@ -11,9 +11,7 @@ Users are strongly adviced to read carefully Affymetrix's "Axiom genotyping solu
 ### **0) AffyPipe publication & how to cite**
 The AffyPipe publication can be found in: http://www.ncbi.nlm.nih.gov/pubmed/25028724
 
-If you used this pipeline for your analysis, please cite:
-
-Nicolazzie EL, Iamartino D, Williams JL (2014). AffyPipe: an open-source pipeline for Affymetrix Axiom genotyping workflow. Bioinformatics, DOI: 10.1093/bioinformatics/btu486 
+If you used this pipeline for your analysis, please cite: **Nicolazzie EL, Iamartino D, Williams JL (2014). AffyPipe: an open-source pipeline for Affymetrix Axiom genotyping workflow. Bioinformatics, DOI: 10.1093/bioinformatics/btu486**
 
 Thanks in advance!
 
@@ -195,7 +193,7 @@ The AffyPipe is intended for all species gentoyped with the Axiom technology, al
   - Purcell S, Neale B, Todd-Brown K, Thomas L, Ferreira MAR, Bender D, Maller J, Sklar P, de Bakker PIW, Daly MJ & Sham PC (2007) PLINK: a toolset for whole-genome association and population-based linkage analysis. American Journal of Human Genetics, 81.
 
 
-### **6) Acknowledgments **
+### **6) Acknowledgments**
 This work was supported by the Italian Ministry of Education, University and Research, project GenHome [D.M. 505/Ric]; and the European Union's Seventh Framework Programme, project Gene2Farm [G.A. 289592].
 
 
