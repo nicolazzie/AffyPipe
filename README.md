@@ -36,7 +36,7 @@ Please remember that you need to register to be able to download all the files b
   - **2.a.1)** Go to: Products > Microarray Solutions > DNA Analysis Solutions > Agrigenomics Solutions > Arrays > Species > Buffalo/[other species], and download the file under *Library Files* section.  For the buffalo it is **Axiom® Buffalo Analysis Files.r[X].zip**, for cow **Axiom_GW_bos_snp_1_r[X].zip**, where [X] stands for the version of the Analysis Files. Please uncompress this file and you'll get a lot of "Axiom_[species].[X].[blablabla] files.
   - **2.a.2)** Go to: Partners & Programs > Developers' Network > DevNet Tools. Inside there you'll find:
       - **2.a.2.1)** Affymetrix PowerTools (APTools): Here you should download the right file for your operative system (something like **APT[X] Linux 64 bit x86 binaries** or **APT [X] Mac OS-Lion 64-bit Intel Binaries**). Note: This pipeline was tested on both OSs. If you're using Mavericks OS, no worries, it will run ok. Please uncompress this folder (inside AFFYTOOLS, if you like).
-      - **2.a.2.2)** **SNPolisher**: An R package for post-processing array's results. Please uncompress this folder (inside AFFYTOOLS, if you like).
+      - **2.a.2.2)** **SNPolisher**: An R package for post-processing array's results. Please uncompress this folder (inside AFFYTOOLS, if you like). **WARNING:** (Sept. 2014) Affymetrix has updated its SNPolisher package to v1.5.0, deprecating some functions. It is compulsary you update your SNPolisher (otherwise the program will stop!). If you have older versions of SNPolisher installed, please either delete them or install the new version on your own BEFORE running Affypipe!**
   - **2.a.3)** Annotation file: You will receive an annotation file from Affymetrix along with your genotypes. However, since data is updated constantly, the download of the latest annotation file is **STRONGLY** recommended. By doing this, even if you analyse samples in different times, you'll be sure of using the latest map information! You can find this in: Products > Microarray Solutions > DNA Analysis Solutions > Agrigenomics Solutions > Arrays > Species > Buffalo[/Bovine or other species]. There, under *Current NetAffx Annotation Files* section, download the file **Axiom_Buffalo Annotations, CSV format** (for buffalo) or **Axiom_GW_Bos_SNP_1.na[X].annot, CSV format** (for cow). Please remember to uncompress the file and put it inside AFFYTOOLS folder.
  
  - **2.b)** *a CEL list file*: All Affymetrix Power Tools programs need a file containing a list of CEL files (raw data) to be analysed. Fortunately, using AffyPipe you will have to do this just once! It is highly recommended that you provide also the full path to the .CEL files. Just remember that *CEL list files* need a compulsary header row: "cel_files". If such header is missing, AffyPipe will stop, since APTools programs cannot run without that header!. 
@@ -195,8 +195,6 @@ The AffyPipe is intended for all species gentoyped with the Axiom technology, al
 
 ### **6) Acknowledgments**
 This work was supported by the Italian Ministry of Education, University and Research, project GenHome [D.M. 505/Ric]; and the European Union's Seventh Framework Programme, project Gene2Farm [G.A. 289592].
-
-
 
 
 

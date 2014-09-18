@@ -9,7 +9,7 @@ Changes:
                     Added some useful options in apt scripts
                     Now reading a param file to allow multiple-species analyses.
    -Jul 2014 (ELN): Exclude collector lib.,specific to Python2.7 (doing the same, less fancier now)
-
+   -Sep 2014 (ELN): Updated SNPolisher scripts, adapted to 1.5.0 (only!) Thankyou Hernan Morales Durand (IGEVET, Argentina)
 For bug report/comments: ezequiel.nicolazzi@tecnoparco.org
 """
 import sys,os,time
@@ -240,6 +240,9 @@ if os.path.isdir(opt.DIRAPT):
         if not os.path.exists(opt.DIRAPT+'/bin/'+infile):
             bomb("Program '"+infile+"' not found in: "+opt.DIRAPT+'/bin/')
 else:bomb("APTools directory not found in: "+opt.DIRAPT)
+
+# Checks for presence of SNPolisher R package
+if not os.path.isdir(opt.DIRSNP):bomb("Expected SNPolisher R package directory (SNPolisher_package) not found in: "+opt.DIRSNP+"\n            This may also due to Affymetrix changing this folder name.\n            In that case, please rename the folder as SNPolisher_package (and update the package BEFORE running this pgm!)")
 
 # Checks for presence of SNPolisher R package
 if not os.path.isdir(opt.DIRSNP):bomb("SNPolisher R package directory not found in: "+opt.DIRSNP)
@@ -524,8 +527,8 @@ Rsc.write("install.packages('"+PAC+"',repos=NULL,type='source');library(SNPolish
 Rsc.write("ps.metrics <- Ps_Metrics(posteriorFile=paste('"+opt.DIROUT+"','/AxiomGT1.snp-posteriors.txt',sep=''),")
 Rsc.write("callFile=paste('"+opt.DIROUT+"','/AxiomGT1.calls.txt',sep=''),")
 Rsc.write("output.metricsFile=paste('"+opt.DIROUT+"','/metrics.txt',sep=''))\n")
-Rsc.write("Ps_Classification(metrics.file=paste('"+opt.DIROUT+"','/metrics.txt',sep=''),")
-Rsc.write("ps2snp.file=paste('"+HERE+"','/ps2snp.txt',sep=''),output.dir=paste('"+opt.DIROUT+"','/output',sep=''),")
+Rsc.write("Ps_Classification(metricsFile=paste('"+opt.DIROUT+"','/metrics.txt',sep=''),")
+Rsc.write("ps2snpFile=paste('"+HERE+"','/ps2snp.txt',sep=''),output.dir=paste('"+opt.DIROUT+"','/output',sep=''),")
 Rsc.write("SpeciesType='Diploid')\n")
 Rsc.write("print('ENDOK')\n")
 Rsc.close()
