@@ -10,6 +10,7 @@ Changes:
                     Now reading a param file to allow multiple-species analyses.
    -Jul 2014 (ELN): Exclude collector lib.,specific to Python2.7 (doing the same, less fancier now)
    -Sep 2014 (ELN): Updated SNPolisher scripts, adapted to 1.5.0 (only!) Thankyou Hernan Morales Durand (IGEVET, Argentina)
+   -Dec 2014 (ELN + Hyunmin - GitHub user @hmkim): Added the possibility to output PLINK file with ACTG alleles (new option)
 For bug report/comments: ezequiel.nicolazzi@tecnoparco.org
 """
 import sys,os,time
@@ -94,7 +95,9 @@ parser.add_option("-f","--platefile", dest='Pfile',default=0,
 parser.add_option("-l","--plateqc", dest='PQC',default='0.95,0.99',
                   help="Plate QC for PlatePassRate and AvgCallRate (BESTPRACTICE only).",metavar="VALUE 0>=1,VALUE 0>=1")
 parser.add_option("-p","--plink",action="store_true", dest="PLINK", default=False,
-                  help="outputs (all) BestProbeset SNPs in PLINK format")
+                  help="outputs (all) BestProbeset SNPs in PLINK format - A B alleles")
+parser.add_option("--plinkACGT",action="store_true", dest="PLINKacgt", default=False,
+                  help="outputs (all) BestProbeset SNPs in PLINK format - A C G T alleles")
 parser.add_option("-e","--editplink", dest='EDITPLINK',default='PMNx',
                   help="Edit options (only if -p is specified). See README file for more info", metavar="PMNOCT")
 parser.add_option("-q","--quiet",action="store_false", dest="VER", default=True,
@@ -210,8 +213,11 @@ if opt.BEST:
 else:logit('%-30s %-s' % ('Type of workflow required:','STANDARD'))
 
 # Checks PLINK and edit options
-if opt.PLINK:
-    logit('%-30s %-s' % ('Genotype file format:','PLINK'))
+if opt.PLINK or opt.PLINKacgt:
+    if opt.PLINK:
+        logit('%-30s %-s' % ('Genotype file format:','PLINK - AB alleles'))
+    else:
+        logit('%-30s %-s' % ('Genotype file format:','PLINK - ACGT alleles'))
     if opt.EDITPLINK=='PMNx':
         oplink=['P','M','N']
         logit('%-30s %-s' % ('Retain SNP probe class:','P + M + N'))
@@ -220,13 +226,18 @@ if opt.PLINK:
         logit('%-30s %-s' % ('Retain SNP probe class:', ' + '.join(oplink)))
 else:logit('%-30s %-s' % ('Genotype file format:','Affymetrix original format'))
 
+# Checks presence of one of the two plink options
+if opt.PLINK and opt.PLINKacgt:
+    bomb('Please choose just ONE of the two plink options (--plink or --plinkACGT). Both options cannot be chosen!')
+
 # Prints warning messages
 if not opt.BEST and opt.PQC!='0.95,0.99':
     logit("\nWARNING MESSAGE: PlateQC options selected without requiring BestPractice workflow - DISREGARDED\n")
 if not opt.BEST and opt.Pfile:
     logit("\nWARNING MESSAGE: Plate file specified without requiring BestPractice workflow - DISREGARDED\n")
 if not opt.PLINK and opt.EDITPLINK!='PMNx':
-    logit("\nWARNING MESSAGE: Editing options selected without requiring to write a PLINK file - DISREGARDED\n")
+    if not opt.PLINKacgt:
+        logit("\nWARNING MESSAGE: Editing options selected without requiring to write a PLINK file - DISREGARDED\n")
 logit('-'*81+'\n')
 
 # Checks for presence of AFFYTOOLS directory (or user defined one!)
@@ -248,9 +259,10 @@ if not os.path.isdir(opt.DIRSNP):bomb("Expected SNPolisher R package directory (
 if not os.path.isdir(opt.DIRSNP):bomb("SNPolisher R package directory not found in: "+opt.DIRSNP)
 
 # Checks for presence of -p if -e option is present
-if opt.PLINK and opt.EDITPLINK!='PMNx':
-    for i in opt.EDITPLINK:
-        if i not in 'PMNOCT':bomb("Editing option not recognized: '"+i+"'. Please choose between: P M N O C T") 
+if opt.PLINK or opt.PLINKacgt:
+    if opt.EDITPLINK!='PMNx':
+        for i in opt.EDITPLINK:
+            if i not in 'PMNOCT':bomb("Editing option not recognized: '"+i+"'. Please choose between: P M N O C T") 
 
 # Check that numbers are numbers and are within range
 check_range(opt.DQC,'Dish-QC')
@@ -504,7 +516,8 @@ logit('\n'+'*'*81+'\n==> FOURTH AFFYMETRIX PROGRAM: This runs SNPolisher R packa
 out3=open(HERE+'/ps2snp.txt','w')
 skip=True
 probeset=0
-if opt.PLINK:allps={}
+if opt.PLINK or opt.PLINKacgt: allps={}
+if opt.PLINKacgt:AlleleACGT={}
 for line in open(Smap):
     if '"Affy SNP ID' in line:
         out3.write('probeset_id snpid\n')
@@ -512,7 +525,11 @@ for line in open(Smap):
     if skip:continue
     line=line.replace('"','')
     probe,snp,nn,crom,pos,rest=line.strip().split(',',5)
-    if opt.PLINK:allps[probe]=(snp,crom,pos)
+    if opt.PLINKacgt:
+        allps[probe]=(snp,crom,pos)
+        if not AlleleACGT.has_key(probe):
+            AlleleACGT[probe] = [line.strip().split(',')[11],line.strip().split(',')[12]]
+    if opt.PLINK: allps[probe]=(snp,crom,pos)
     out3.write('%s %s\n' % (probe,snp))
     probeset+=1
 out3.close()
@@ -548,7 +565,7 @@ else:
 ### Launch fifth part (conversion to PLINK fmt if required)
 ###############################################################
 edits={'P':'PolyHighResolution','M':'MonoHighResolution','N':'NoMinorHom','O':'OTV','C':'CallRateBelowThreshold', 'T':'Other'} 
-if opt.PLINK:
+if opt.PLINK or opt.PLINKacgt:
     logit('\n'+'*'*81+'\n==> Reading SNPolisher output to keep best probes <==\n'+'*'*81)
     skip=True
     n=0;ke=0
@@ -588,6 +605,10 @@ if opt.PLINK:
             anims=True;continue
         if not anims:continue
         line = line.strip().split('\t')
+        if opt.PLINKacgt:
+            probe_id = line[0]
+            probe_a,probe_b = AlleleACGT[probe_id]
+            geno_code = {'0':probe_b+' '+probe_b, '1':probe_a+' '+probe_b, '2':probe_a+' '+probe_a, '-1':'0 0'}
         if not keeprobe.has_key(line[0]):continue
         odata=allps.get(line[0],False)
         if not odata:
@@ -597,7 +618,10 @@ if opt.PLINK:
         d=-1
         for x in line[1:]:
             d+=1
-            G[d].append(geno_code[x])
+            try:
+                G[d].append(geno_code[x])
+            except:
+                bomb('ERROR while reading probe '+probe_id+' in '+opt.DIROUT+'/AxiomGT1.calls.txt -> ALLELES '+x+' NOT RECOGNIZED!')
 
     # Write .ped file
     for j in range(len(allids)):

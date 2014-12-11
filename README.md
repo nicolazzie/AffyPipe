@@ -139,7 +139,10 @@ For example, the following are all acceptable specifications for "animalnumber1"
 This option is considered only if **-b** option is present. It allows to change Plate QC thresholds for PlatePassRate and AverageCallRate, respectively. Note that these values MUST BE comma separated, and both must be provided.
 
 **-p** or **--plink** [DEFAULT: no plink output]
-This option outputs (all) *BestProbeset* SNPs in PLINK format. The pipeline just goes through the Ps.performace.txt (output) file keeping genotypes of all probes classified as "1" in the "BestProbeset" field. Map file is created using SNP names (please read "Axiom genotyping solution data analysis guide" for further information).
+This option outputs (all) *BestProbeset* SNPs in PLINK format, coding alleles as A B. The pipeline just goes through the Ps.performace.txt (output) file keeping genotypes of all probes classified as "1" in the "BestProbeset" field. Map file is created using SNP names (please read "Axiom genotyping solution data analysis guide" for further information).
+
+**--plinkACGT** [DEFAULT: no plink output]
+This option is an alternative to -p or --plink option, with the only difference that it codes alleles in ACGT instead of AB. This option was suggested (and code provided) by GitHub user Hyunmin (@hmkim). Thank you!
 
 **-e** or **--editplink** [DEFAULT: PMN ]
 This option allows the user to edit the SNP probe classes. Affymetrix SNPolisher R package currently classifies SNP probes into 6 classes: "PolyHighResolution" (P), "MonoHighResolution" (M), "NoMinorHomozygote" (N), "OTV" (O), "CallRateBelowThreshold" (C) and, "Other" (T).
@@ -160,9 +163,9 @@ The following are just illustrative examples of commands to run the AffyPipe for
   
     % python AffyPipe.py mycellistfile.txt -d 0.90 -c 0.99 -p
     
-3)Run a "best practice" workflow, use own QC values (default plate setting) and get best probes for "PolyHighRes" and "MonoHighRes" classes in PLINK format. 
+3)Run a "best practice" workflow, use own QC values (default plate setting) and get best probes for "PolyHighRes" and "MonoHighRes" classes in PLINK format, coding alleles as AB (use --plinkACGT to code alleles in ACGT format). 
     
-    % python AffyPipe.py mycellistfile.txt -d 0.90 -c 0.99 -b -l 0.99,0.99 -p -e PM
+    % python AffyPipe.py mycellistfile.txt -d 0.90 -c 0.99 -b -l 0.99,0.99 --plink -e PM
 
 #### *Output files and folders*
 Unless differently specified by the user, all output files will be written in a directory named OUTPUT, placed in the same directory where AffyPipe is run.
@@ -173,7 +176,7 @@ A number of files will be present in the OUTPUT folder, and most of them will be
  - **LOWQUAL_ELIMids.txt**: This file contains the (CEL) ids of the individuals excluded by the APTools in the different stages.
  - **SNPol.R** and **SNPol.Rout**: Program (and I/O output) used to run SNPolisher R package.
  - **output folder**: This folder contains the output of the SNPolisher R package. You might want to have a look at the "Ps.performance.txt" file, which contains the summary of all the QC run on probes. For specific information on each of these files, please read Affymetrix's "Axiom genotyping solution data analysis guide" and "Best practice supplement to Axiom genotyping solution data analysis user guide". 
- - **Axiom_genotypes_PLINKfmt.[ped/map] (if requested)**: These files contain all SNP genotypes (choosing best probes for each SNP from "Ps.performance.txt") in PLINK format, recoding genotypes as: 0:'B/B', 1:'A/B', 2:'A/A','-1':'0/0'.
+ - **Axiom_genotypes_PLINKfmt.[ped/map] (if requested)**: These files contain all SNP genotypes (choosing best probes for each SNP from "Ps.performance.txt") in PLINK format, recoding genotypes as: 0:'B/B', 1:'A/B', 2:'A/A','-1':'0/0' or their respective alleles if --plinkACGT option is requested.
 
 ### **4) Different species**
 The AffyPipe is intended for all species gentoyped with the Axiom technology, although it was originally built for the specific needs of the International Buffalo Genome Consortium (Iamartino et al.,2013). **Please note that testing has been carried out only on Buffalo + Human Exome 319 and EUR Axiom datasets (GEO platforms: GPL18760 and GPL52691).** Just by setting up the parameter file, you should be successful in using this tool on any other non-tested species. In case of problems, please contact the author of this pipeline at: ezequiel [dot] nicolazzi [at] tecnoparco [dot] org, and he'll be very happy to help you (and integrate the necessary changes in this tool!).
@@ -195,7 +198,7 @@ The AffyPipe is intended for all species gentoyped with the Axiom technology, al
 
 ### **6) Acknowledgments**
 This work was supported by the Italian Ministry of Education, University and Research, project GenHome [D.M. 505/Ric]; and the European Union's Seventh Framework Programme, project Gene2Farm [G.A. 289592].
-
+I personally thank Hernan Morales Durand (IGEVET, Argentina) and GitHub user Hyunmin (@hmkim) for suggestions (and code) provided to improve this tool.
 
 
 ### **Disclaimer**
