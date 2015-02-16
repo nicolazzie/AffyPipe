@@ -11,6 +11,8 @@ Changes:
    -Jul 2014 (ELN): Exclude collector lib.,specific to Python2.7 (doing the same, less fancier now)
    -Sep 2014 (ELN): Updated SNPolisher scripts, adapted to 1.5.0 (only!) Thankyou Hernan Morales Durand (IGEVET, Argentina)
    -Dec 2014 (ELN + Hyunmin - GitHub user @hmkim): Added the possibility to output PLINK file with ACTG alleles (new option)
+   -Feb 2014 (ELN): Added a new header for MasterCsvAnnotationFile(s) + added a bomb if probes==0. Thankyou Hamdy Abdel-Shafy (Cairo UNI, Egypt)
+
 For bug report/comments: ezequiel.nicolazzi@tecnoparco.org
 """
 import sys,os,time
@@ -519,7 +521,7 @@ probeset=0
 if opt.PLINK or opt.PLINKacgt: allps={}
 if opt.PLINKacgt:AlleleACGT={}
 for line in open(Smap):
-    if '"Affy SNP ID' in line:
+    if '"Affy SNP ID' in line or 'probeset_id","snpid",' in line:
         out3.write('probeset_id snpid\n')
         skip=False;continue
     if skip:continue
@@ -533,7 +535,10 @@ for line in open(Smap):
     out3.write('%s %s\n' % (probe,snp))
     probeset+=1
 out3.close()
-logit("[GOOD NEWS]: Total probe sets read: "+str(probeset))
+
+if probeset==0:bomb('ANNOTATION file ('+Smap+') seems to be empty!. Please check the file.\n'+\
+                     '            If the file is not empty, please write to ezequiel.nicolazzi@tecnoparco.org')
+logit("[GOOD NEWS]: Total probe sets read in "+Smap+": "+str(probeset))
 
 PAC = sub.Popen(["ls "+opt.DIRSNP+"/SNPolisher*.tar.gz"], shell=True,stdout=sub.PIPE, stderr=sub.STDOUT).stdout.readline()
 Rsc=open(opt.DIROUT+'/SNPol.R','w')
