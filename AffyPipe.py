@@ -12,6 +12,7 @@ Changes:
    -Sep 2014 (ELN): Updated SNPolisher scripts, adapted to 1.5.0 (only!) Thankyou Hernan Morales Durand (IGEVET, Argentina)
    -Dec 2014 (ELN + Hyunmin - GitHub user @hmkim): Added the possibility to output PLINK file with ACTG alleles (new option)
    -Feb 2014 (ELN): Added a new header for MasterCsvAnnotationFile(s) + added a bomb if probes==0. Thankyou Hamdy Abdel-Shafy (Cairo UNI, Egypt)
+                    Changed stop for warning when Affy files missing. Thankyou Jenny C. Armstrong!
 
 For bug report/comments: ezequiel.nicolazzi@tecnoparco.org
 """
@@ -245,7 +246,8 @@ logit('-'*81+'\n')
 # Checks for presence of AFFYTOOLS directory (or user defined one!)
 if not os.path.isdir(opt.DIRXML):bomb("AFFYTOOLS directory not found: "+opt.DIRXML)
 for infile in SPEC_axfiles:
-    if not os.path.exists(opt.DIRXML+'/'+infile):bomb("File '"+infile+"' not found in: "+opt.DIRXML)
+    if not os.path.exists(opt.DIRXML+'/'+infile):
+        logit("WARNING MESSAGE: File '"+infile+"' not found in: "+opt.DIRXML+"\n             ==> Program might behave unexpectedly!! <==\n")
 
 # Checks for presence of APTools directory & important programs within that folder
 if os.path.isdir(opt.DIRAPT):
