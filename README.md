@@ -23,6 +23,8 @@ Further information on how to install git on Linux and Mac can be found at: http
 
 The AffyPipe pipeline is for users running **Linux/Unix** and **Mac** operative systems, and only runs over 64bit processors. **Windows users should use Gentoyping Console (TM) Software, which already cover all of these functionalities!!!** 
 You should have Python (2.x) and R (any version?) already installed on your computer (Mac users have python already installed by default). The whole pipeline was thoroughly tested under Python 2.7.6 and R 3.0.
+**IMPORTANT**: Since Cygwin uses a twisted way of building linux-like (?) paths, AffyPipe may not work properly. We **strongly** suggest using a virtual machine (e.g. VirtualBox) with ubuntu (or similar), instead of Cygwin. A tip: if you *really* want to use Cygwin (why would you?!?!?), please know that you should use *relative* paths for all the folders and files involved. Absolute paths will not work.
+
 
 ### **2) Folders and files required**
 The Affymetrix genotyping workflow requires several Affymetrix files to run. For simplicity, all these files are expected to be placed into one folder.
@@ -148,6 +150,9 @@ This option is an alternative to -p or --plink option, with the only difference 
 This option allows the user to edit the SNP probe classes. Affymetrix SNPolisher R package currently classifies SNP probes into 6 classes: "PolyHighResolution" (P), "MonoHighResolution" (M), "NoMinorHomozygote" (N), "OTV" (O), "CallRateBelowThreshold" (C) and, "Other" (T).
 Any of the 6 SNP probe classes added after this option will be retained. If both probes of the same SNP carry the retained class(es), then only the one classified as "BestProbeset" will be retained.
 The default option retains all SNP probesets that are classified as PolyHighResolution, MonoHighResolution and NoMinorHomozygote.
+
+**--debug** [DEFAUL: OFF ]
+This option prints a full report on each step of the APT process. This option is useful if the program stops or gives any error message. Please run the program with this flag before reporting anything to the author, to help him identify the problem as soon as possible!
 
 **-q** or **--quiet** [DEFAULT: loud (it's an italian software! :) )]
 This option avoids showing runtime messages to stdout.

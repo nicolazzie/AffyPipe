@@ -13,6 +13,8 @@ Changes:
    -Dec 2014 (ELN + Hyunmin - GitHub user @hmkim): Added the possibility to output PLINK file with ACTG alleles (new option)
    -Feb 2014 (ELN): Added a new header for MasterCsvAnnotationFile(s) + added a bomb if probes==0. Thankyou Hamdy Abdel-Shafy (Cairo UNI, Egypt)
                     Changed stop for warning when Affy files missing. Thankyou Jenny C. Armstrong!
+   -Mar 2014 (ELN): Previous edit was not effective, since Affy annotation files change A LOT in the different species. This version should fix that.
+                    Added a --debug option to help me during troubleshooting.
 
 For bug report/comments: ezequiel.nicolazzi@tecnoparco.org
 """
@@ -103,6 +105,8 @@ parser.add_option("--plinkACGT",action="store_true", dest="PLINKacgt", default=F
                   help="outputs (all) BestProbeset SNPs in PLINK format - A C G T alleles")
 parser.add_option("-e","--editplink", dest='EDITPLINK',default='PMNx',
                   help="Edit options (only if -p is specified). See README file for more info", metavar="PMNOCT")
+parser.add_option("--debug", action="store_true",dest='DEBUG',default=False,
+                  help="Use this option to create a more informative .log if something does not work")
 parser.add_option("-q","--quiet",action="store_false", dest="VER", default=True,
                   help="Avoid showing runtime messages to stdout")
 (opt, args) = parser.parse_args()
@@ -229,6 +233,10 @@ if opt.PLINK or opt.PLINKacgt:
         logit('%-30s %-s' % ('Retain SNP probe class:', ' + '.join(oplink)))
 else:logit('%-30s %-s' % ('Genotype file format:','Affymetrix original format'))
 
+# Checks and prints if DEBUG option is on
+if opt.DEBUG:logit('%-30s %-s' % ('DEBUG mode:','ON'))
+
+
 # Checks presence of one of the two plink options
 if opt.PLINK and opt.PLINKacgt:
     bomb('Please choose just ONE of the two plink options (--plink or --plinkACGT). Both options cannot be chosen!')
@@ -305,9 +313,11 @@ std = sub.Popen([str(opt.DIRAPT+'/bin/./'+APT_progs[0]+                \
 
 if 'Done running GenoQC' in std[-1]:
     logit("[GOOD NEWS]: Affymetrix APT first qc run OK!. This "+std[-2].strip())
+    if opt.DEBUG:logit('AffyAPT - 1 - OK:\n'+''.join(std))
 else:
     print "\n[BAD NEWS]: Affymetrix APT first qc DID NOT run ok..."
     num = [i for i,x in enumerate(std) if x=="*\n"]
+    if opt.DEBUG:logit('AffyAPT - 1 - ERROR:\n'+''.join(std))
     bomb("Error message given:\n[BAD NEWS]: "+std[int(num[-1]+1)]+'[BAD NEWS]: '+std[-1])
 
 ##############################################################################################
@@ -380,9 +390,12 @@ std = sub.Popen([str(opt.DIRAPT+'/bin/./'+APT_progs[1]+                    \
 
 if 'Done running ProbesetGenotypeEngine' in std[-1]:
     logit("[GOOD NEWS]: Affymetrix APT second qc run OK!. This "+std[-2].strip())
+    if opt.DEBUG:logit('AffyAPT - 2 - OK:\n'+''.join(std))
+
 else:
     print "\n[BAD NEWS]: Affymetrix APT second qc DID NOT run ok..."
     num = [i for i,x in enumerate(std) if x=="*\n"]
+    if opt.DEBUG:logit('AffyAPT - 2 - ERROR:\n'+''.join(std))
     bomb("Error message given:\n[BAD NEWS]: "+std[int(num[-1]+1)]+'[BAD NEWS]: '+std[-1])
 
 ##############################################################################################
@@ -506,9 +519,11 @@ std = sub.Popen([str(opt.DIRAPT+'/bin/./'+APT_progs[1]+                         
 
 if 'Done running ProbesetGenotypeEngine' in std[-1]:
     logit("[GOOD NEWS]: Affymetrix APT third qc run OK!. This "+std[-2].strip())
+    if opt.DEBUG:logit('AffyAPT - 3 - OK:\n'+''.join(std))
 else:
     print "\n[BAD NEWS]: Affymetrix APT third qc DID NOT run ok..."
     num = [i for i,x in enumerate(std) if x=="*\n"]
+    if opt.DEBUG:logit('AffyAPT - 3 - ERROR:\n'+''.join(std))
     bomb("Error message given:\n[BAD NEWS]: "+std[int(num[-1]+1)]+'[BAD NEWS]: '+std[-1])
 
 ################################################
@@ -523,16 +538,35 @@ probeset=0
 if opt.PLINK or opt.PLINKacgt: allps={}
 if opt.PLINKacgt:AlleleACGT={}
 for line in open(Smap):
-    if '"Affy SNP ID' in line or 'probeset_id","snpid",' in line:
+    if '#' in line[0] or len(line)<50:continue  #Avoids issues caused by Affy's different headings and formats 
+    if skip and 'id' in line or 'ID' in line:
+        line=line.replace('"','')
+        if len(line.strip().split('\t')) > 5:
+            sep='\t'
+            header=line.strip().split('\t')
+        elif len(line.strip().split(',')) > 5:
+            sep=','
+            header=line.strip().split(',')
+        elif len(line.strip().split(';')) > 5:
+            sep=';'
+            header=line.strip().split(',')
+        else:
+            sep='SPA'
+            header=line.strip().split()
+        pos_allA=header.index('Allele A')
+        pos_allB=header.index('Allele B')
         out3.write('probeset_id snpid\n')
-        skip=False;continue
-    if skip:continue
+        skip=False
+        continue
     line=line.replace('"','')
-    probe,snp,nn,crom,pos,rest=line.strip().split(',',5)
+    ## Detecting separator
+    if sep!='SPA':allfields=line.strip().split(sep)
+    else: allfields=line.strip().split()
+    probe,snp,nn,crom,pos=allfields[:5]
     if opt.PLINKacgt:
         allps[probe]=(snp,crom,pos)
         if not AlleleACGT.has_key(probe):
-            AlleleACGT[probe] = [line.strip().split(',')[11],line.strip().split(',')[12]]
+            AlleleACGT[probe] = [allfields[pos_allA],allfields[pos_allB]]
     if opt.PLINK: allps[probe]=(snp,crom,pos)
     out3.write('%s %s\n' % (probe,snp))
     probeset+=1
@@ -540,7 +574,8 @@ out3.close()
 
 if probeset==0:bomb('ANNOTATION file ('+Smap+') seems to be empty!. Please check the file.\n'+\
                      '            If the file is not empty, please write to ezequiel.nicolazzi@tecnoparco.org')
-logit("[GOOD NEWS]: Total probe sets read in "+Smap+": "+str(probeset))
+logit("[GOOD NEWS]: Total probe sets read in "+Smap+"\n              (separator found:'"+sep+"' & alleles in position: "+\
+                    str(pos_allA+1)+"-"+str(pos_allB+1)+"): "+str(probeset))
 
 PAC = sub.Popen(["ls "+opt.DIRSNP+"/SNPolisher*.tar.gz"], shell=True,stdout=sub.PIPE, stderr=sub.STDOUT).stdout.readline()
 Rsc=open(opt.DIROUT+'/SNPol.R','w')
@@ -564,8 +599,10 @@ sub.call(["R CMD BATCH %s/SNPol.R %s/SNPol.Rout " % (opt.DIROUT,opt.DIROUT)],she
 CHK = sub.Popen(["tail "+opt.DIROUT+"/SNPol.Rout | grep '[1]'| grep 'ENDOK'"], shell=True,stdout=sub.PIPE, stderr=sub.STDOUT).stdout.readline().strip()
 if CHK=='[1] "ENDOK"':
     logit("[GOOD NEWS]: Program 4 (Affymetrix SNPolisher) seems to have run OK!")
+    if opt.DEBUG:logit('SNPolisher - OK:\n'+''.join(CHK))
 else:
     print "\n[BAD NEWS]: Program 4 (Affymetrix SNPolisher) DID NOT run ok..."
+    if opt.DEBUG:logit('SNPolisher - ERROR:\n'+''.join(CHK))
     bomb("Error message given:\n[BAD NEWS]: Please check: "+opt.DIROUT+"/SNPol.Rout for more information")
 
 ###############################################################
@@ -614,6 +651,8 @@ if opt.PLINK or opt.PLINKacgt:
         line = line.strip().split('\t')
         if opt.PLINKacgt:
             probe_id = line[0]
+            if not AlleleACGT.has_key(probe_id):
+                bomb("Annotation file does not contain probe: "+probe_id+" information. Check you're using the right file!")
             probe_a,probe_b = AlleleACGT[probe_id]
             geno_code = {'0':probe_b+' '+probe_b, '1':probe_a+' '+probe_b, '2':probe_a+' '+probe_a, '-1':'0 0'}
         if not keeprobe.has_key(line[0]):continue
