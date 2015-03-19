@@ -11,10 +11,11 @@ Changes:
    -Jul 2014 (ELN): Exclude collector lib.,specific to Python2.7 (doing the same, less fancier now)
    -Sep 2014 (ELN): Updated SNPolisher scripts, adapted to 1.5.0 (only!) Thankyou Hernan Morales Durand (IGEVET, Argentina)
    -Dec 2014 (ELN + Hyunmin - GitHub user @hmkim): Added the possibility to output PLINK file with ACTG alleles (new option)
-   -Feb 2014 (ELN): Added a new header for MasterCsvAnnotationFile(s) + added a bomb if probes==0. Thankyou Hamdy Abdel-Shafy (Cairo UNI, Egypt)
+   -Feb 2015 (ELN): Added a new header for MasterCsvAnnotationFile(s) + added a bomb if probes==0. Thankyou Hamdy Abdel-Shafy (Cairo UNI, Egypt)
                     Changed stop for warning when Affy files missing. Thankyou Jenny C. Armstrong!
-   -Mar 2014 (ELN): Previous edit was not effective, since Affy annotation files change A LOT in the different species. This version should fix that.
+   -Mar 2015 (ELN): Previous edit was not effective, since Affy annotation files change A LOT in the different species. This version should fix that.
                     Added a --debug option to help me during troubleshooting.
+                    MAJOR BUG solved for option --plinkACGT. Allele code for AA AB and BB were switched! Thank you Ryan Hillary (Standford Uni, UK)!
 
 For bug report/comments: ezequiel.nicolazzi@tecnoparco.org
 """
@@ -654,7 +655,7 @@ if opt.PLINK or opt.PLINKacgt:
             if not AlleleACGT.has_key(probe_id):
                 bomb("Annotation file does not contain probe: "+probe_id+" information. Check you're using the right file!")
             probe_a,probe_b = AlleleACGT[probe_id]
-            geno_code = {'0':probe_b+' '+probe_b, '1':probe_a+' '+probe_b, '2':probe_a+' '+probe_a, '-1':'0 0'}
+            geno_code = {'2':probe_b+' '+probe_b, '1':probe_a+' '+probe_b, '0':probe_a+' '+probe_a, '-1':'0 0'}
         if not keeprobe.has_key(line[0]):continue
         odata=allps.get(line[0],False)
         if not odata:

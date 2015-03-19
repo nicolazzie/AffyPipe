@@ -2,6 +2,8 @@ AffyPipe: _an open-source pipeline for Affymetrix Axiom genotyping workflow_
 =========
 *ref: E.L. Nicolazzi (Fondazione Parco Tecnologico Padano) - Via Einstein, Loc. Cascina Codazza (26900) Lodi (Italy). Email: ezequiel [dot] nicolazzi [at] tecnoparco [dot] org*
 
+<span style="color:red"> **WARING FOR ALL USERS:** A major bug was reported on the --plinkACGT or --plinkAB option. Allele coding was switched ("0" genotypes were coded as BB, instead of AA). This bug affects all users using AffyPipe versions from 11 Dec 2014 onwards (previous versions are "safe"). Although does not affect the use of the data *per se*, it can create some major issues if data is exchanged. Thus, I **HIGHLY** recommend to pull this latest version and re-run the program over all your samples again. Sorry for all the trouble this may cause you! </span>
+
 
 The goal of this pipeline is to authomatize Affymetrix's standard and "best practice" genotyping workflows for Linux and Mac users: from Power tools (APTools) to SNPolisher R package.
 This is a one-step tool that combines all Affymetrix software and produces edited and user-friendly format output files. In fact, AffyPipe allows you to edit SNP probe classes directly while exporting genotypes in PLINK format (Purcel et al, 2007).
