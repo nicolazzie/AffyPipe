@@ -16,6 +16,7 @@ Changes:
    -Mar 2015 (ELN): Previous edit was not effective, since Affy annotation files change A LOT in the different species. This version should fix that.
                     Added a --debug option to help me during troubleshooting.
                     MAJOR BUG solved for option --plinkACGT. Allele code for AA AB and BB were switched! Thank you Ryan Hillary (Standford Uni, UK)!
+   -Mar 2015 (ELN): Corrected a bug in call rate procedure (Thank you user bbib!)
 
 For bug report/comments: ezequiel.nicolazzi@tecnoparco.org
 """
@@ -426,7 +427,7 @@ for a in open(opt.DIROUT+'/AxiomGT1.report.txt'):
         skip=False;continue
     if skip:continue
     celfilex,sex,CRATE,rest=a.strip().split('\t',3)
-    if float(CRATE)<float(opt.CR):
+    if float(CRATE)/100.<float(opt.CR):
         elim.write(a.strip().split('\t')[0]+' CALLRATE:'+str(CRATE)+'\n')
         logit("### Excluding individual: "+celfilex+" -->CALL RATE: "+CRATE)
         continue
