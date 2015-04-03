@@ -541,22 +541,29 @@ if opt.PLINK or opt.PLINKacgt: allps={}
 if opt.PLINKacgt:AlleleACGT={}
 for line in open(Smap):
     if '#' in line[0] or len(line)<50:continue  #Avoids issues caused by Affy's different headings and formats 
-    if skip and 'id' in line or 'ID' in line:
-        line=line.replace('"','')
-        if len(line.strip().split('\t')) > 5:
-            sep='\t'
-            header=line.strip().split('\t')
-        elif len(line.strip().split(',')) > 5:
-            sep=','
-            header=line.strip().split(',')
-        elif len(line.strip().split(';')) > 5:
-            sep=';'
-            header=line.strip().split(',')
-        else:
-            sep='SPA'
-            header=line.strip().split()
-        pos_allA=header.index('Allele A')
-        pos_allB=header.index('Allele B')
+    if skip:
+        if 'id' in line or 'ID' in line:
+            line=line.replace('"','')
+            if len(line.strip().split('\t')) > 5:
+                sep='\t'
+                header=line.strip().split('\t')
+            elif len(line.strip().split(',')) > 5:
+                sep=','
+                header=line.strip().split(',')
+            elif len(line.strip().split(';')) > 5:
+                sep=';'
+                header=line.strip().split(',')
+            else:
+                sep='SPA'
+                header=line.strip().split()
+        try:
+            pos_allA=header.index('Allele A')
+        except ValueError:
+            bomb("Variable 'Allele A' not found in the header read. I read for:"+header)
+        try:
+            pos_allB=header.index('Allele B')
+        except ValueError:
+            bomb("Variable 'Allele B' not found in the header read. I read for:"+header)
         out3.write('probeset_id snpid\n')
         skip=False
         continue
