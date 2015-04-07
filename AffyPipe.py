@@ -542,7 +542,7 @@ if opt.PLINKacgt:AlleleACGT={}
 for line in open(Smap):
     if '#' in line[0] or len(line)<50:continue  #Avoids issues caused by Affy's different headings and formats 
     if skip:
-        if 'id' in line or 'ID' in line:
+        if line.count('"')>10:
             line=line.replace('"','')
             if len(line.strip().split('\t')) > 5:
                 sep='\t'
@@ -556,14 +556,18 @@ for line in open(Smap):
             else:
                 sep='SPA'
                 header=line.strip().split()
-        try:
-            pos_allA=header.index('Allele A')
-        except ValueError:
-            bomb("Variable 'Allele A' not found in the header read. I read for:"+header)
-        try:
-            pos_allB=header.index('Allele B')
-        except ValueError:
-            bomb("Variable 'Allele B' not found in the header read. I read for:"+header)
+        try:probe=header.index('Probe Set ID')
+        except ValueError:bomb("Variable 'Probe Set ID' not found in header. Header variables found:"+str(header))
+        try:snp=header.index('Affy SNP ID')
+        except ValueError:bomb("Variable 'Affy SNP ID' not found in header read. Header variables found:"+str(header))
+        try:crom=header.index('Chromosome')
+        except ValueError:bomb("Variable 'Chromosome' not found in header read. Header variables found:"+str(header))
+        try:pos=header.index('Physical Position')
+        except ValueError:bomb("Variable 'Physical Position' not found in header. Header variables found:"+str(header))
+        try:pos_allA=header.index('Allele A')
+        except ValueError:bomb("Variable 'Allele A' not found in header. Header variables found:"+str(header))
+        try:pos_allB=header.index('Allele B')
+        except ValueError:bomb("Variable 'Allele B' not found in header. Header variables found:"+str(header))
         out3.write('probeset_id snpid\n')
         skip=False
         continue
@@ -571,13 +575,13 @@ for line in open(Smap):
     ## Detecting separator
     if sep!='SPA':allfields=line.strip().split(sep)
     else: allfields=line.strip().split()
-    probe,snp,nn,crom,pos=allfields[:5]
+    ## 
     if opt.PLINKacgt:
-        allps[probe]=(snp,crom,pos)
-        if not AlleleACGT.has_key(probe):
-            AlleleACGT[probe] = [allfields[pos_allA],allfields[pos_allB]]
-    if opt.PLINK: allps[probe]=(snp,crom,pos)
-    out3.write('%s %s\n' % (probe,snp))
+        allps[probe]=(allfields[snp],allfields[crom],allfields[pos])
+        if not AlleleACGT.has_key(allfields[probe]):
+            AlleleACGT[allfields[probe]] = [allfields[pos_allA],allfields[pos_allB]]
+    if opt.PLINK: allps[allfields[probe]]=(allfields[snp],allfields[crom],allfields[pos])
+    out3.write('%s %s\n' % (allfields[probe],allfields[snp]))
     probeset+=1
 out3.close()
 
