@@ -27,19 +27,19 @@ import subprocess as sub
 ################################################
 ### Useful defs
 ################################################
-# This stops the pipeline when something BAD happens
-def bomb(msg):
-    print('\n\n[BAD NEWS]: '+msg+'\n')
-    print "*"*60
-    print "Program stopped because of an error. Please read .log file"
-    print "*"*60
-    sys.exit()
-
 # Prints (if required) and writes the log 
 def logit(msg):
     global VER
     if VER:print(msg)
     log.write(msg+'\n')
+
+# This stops the pipeline when something BAD happens
+def bomb(msg):
+    logit('\n\n[BAD NEWS]: '+msg+'\n')
+    print "*"*60
+    print "Program stopped because of an error. Please read .log file"
+    print "*"*60
+    sys.exit()
 
 def check_range(inp,option):
     try: 
@@ -577,7 +577,7 @@ for line in open(Smap):
     else: allfields=line.strip().split()
     ## 
     if opt.PLINKacgt:
-        allps[probe]=(allfields[snp],allfields[crom],allfields[pos])
+        allps[allfields[probe]]=(allfields[snp],allfields[crom],allfields[pos])
         if not AlleleACGT.has_key(allfields[probe]):
             AlleleACGT[allfields[probe]] = [allfields[pos_allA],allfields[pos_allB]]
     if opt.PLINK: allps[allfields[probe]]=(allfields[snp],allfields[crom],allfields[pos])
