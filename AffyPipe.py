@@ -17,6 +17,7 @@ Changes:
                     Added a --debug option to help me during troubleshooting.
                     MAJOR BUG solved for option --plinkACGT. Allele code for AA AB and BB were switched! Thank you Ryan Hillary (Standford Uni, UK)!
    -Mar 2015 (ELN): Corrected a bug in call rate procedure (Thank you user bbib!)
+                    Moved control of Annotation file to start of pgm to avoid these issues stopping the program at the end.
 
 For bug report/comments: ezequiel.nicolazzi@tecnoparco.org
 """
@@ -136,6 +137,17 @@ else:
             Sver=line.split('=')[1].strip().split()[0].strip()
         if 'SPEC_annotation' in line:
             Smap=opt.DIRXML+'/'+line.split('=')[1].strip().split()[0].strip()
+            for line in open(Smap):
+                if '#' in line[0] or len(line)<50:continue  #Avoids issues caused by Affy's different headings and formats
+                line=line.replace('"','').replace("'","")
+                if len(line.strip().split('\t')) > 5: he=line.strip().split('\t')
+                elif len(line.strip().split(',')) > 5:he=line.strip().split(',')
+                elif len(line.strip().split(';')) > 5:he=line.strip().split(',')
+                else: he=line.strip().split()
+                okhead=('Probe Set ID','Affy SNP ID','Chromosome','Physical Position','Allele A','Allele B')
+                for oktxt in okhead:
+                    if not oktxt in he: bomb("Header in annotation file: "+Smap+" does not contain required variable '"+oktxt+"' - Please change manually!")
+                break
     if not Spfix or not Sver or not Smap:
         bomb("Ooopsss, something went wrong with the reading of param file. Please check the file are retry!")
     if not os.path.exists(opt.DIRXML+'/'+Spfix+'.'+Sver+'.apt-geno-qc.AxiomQC1.xml'):
