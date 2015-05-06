@@ -657,7 +657,7 @@ if opt.PLINK or opt.PLINKacgt:
     logit('\n'+'*'*81+'\n==> Converting gentoypes into PLINK FORMAT <==\n'+'*'*81)
     file_ped=open(opt.DIROUT+'/Axiom_genotypes_PLINKfmt.ped','w')
     file_map=open(opt.DIROUT+'/Axiom_genotypes_PLINKfmt.map','w')
-    geno_code = {'0':'B B', '1':'A B', '2':'A A', '-1':'0 0'}
+    geno_code = {'0':'A A', '1':'A B', '2':'B B', '-1':'0 0'}
 
     try:
         callfile=open(opt.DIROUT+'/AxiomGT1.calls.txt','r')
