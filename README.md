@@ -29,9 +29,6 @@ You should have Python (2.x) and R (any version?) already installed on your comp
 **IMPORTANT**: Since Cygwin uses a twisted way of building linux-like (?) paths, AffyPipe may not work properly. We **strongly** suggest using a virtual machine (e.g. VirtualBox) with ubuntu (or similar), instead of Cygwin. A tip: if you *really* want to use Cygwin (why would you?!?!?), please know that you should use *relative* paths for all the folders and files involved. Absolute paths will not work.
 
 
-**IMPORTANT WARNING FOR ALL USERS USING AffyPipe VERSIONS CLONED BEFORE 19/03/15:** _A bug was reported on the --plinkACGT or --plinkAB option. Allele coding was switched (eg. "0" genotypes were coded as BB instead of AA, and vice-versa). This bug affects all users using AffyPipe of ANY version until 19/03/15. Although it does not affect the use of the data *per se*, it creates comparability issues when integrating data from other sources (eg. when data is exchanged from other sources). Therefore, I **HIGHLY** recommend you to pull the (current) latest version and re-run the program over all your samples again. Sorry for all the trouble this may have caused you!_ <==== 
-
-
 ### **2) Folders and files required**
 The Affymetrix genotyping workflow requires several Affymetrix files to run. For simplicity, all these files are expected to be placed into one folder.
 The default folder names and values specified below are provided as example. However, please note these names and values are also default in AffyPipe (see "Options" paragraph in Section 3).
