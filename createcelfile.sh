@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ### This small bash creates a CEL list file from the current folder, extracting the whole path from pwd.
 ### Coded originally by Ezequiel L. Nicolazzi (Fondazione Parco Tecnologico Padano).
 ### March 2014

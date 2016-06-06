@@ -65,10 +65,10 @@ SYS = sub.Popen(["uname -s"], shell=True,stdout=sub.PIPE, stderr=sub.STDOUT).std
 ARC = sub.Popen(["uname -m"], shell=True,stdout=sub.PIPE, stderr=sub.STDOUT).stdout.readline().strip()
 
 if SYS=='Darwin':
-    APTools='/apt-1.15.2-x86_64-apple-lion/'
+    APTools='/apt-1.18.0-x86_64-apple-lion/'
     logit('Recognised a MACOSx system')
 else: 
-    APTools='/apt-1.15.2-x86_64-intel-linux/'
+    APTools='/apt-1.18.0-x86_64-intel-linux/'
     logit('Recognised a Linux system')
 
 if '64' in ARC:
