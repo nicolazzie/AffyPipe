@@ -18,8 +18,9 @@ Changes:
                     MAJOR BUG solved for option --plinkACGT. Allele code for AA AB and BB were switched! Thank you Ryan Hillary (Standford Uni, UK)!
    -Mar 2015 (ELN): Corrected a bug in call rate procedure (Thank you user bbib!)
                     Moved control of Annotation file to start of pgm to avoid these issues stopping the program at the end.
+   -Jun 2016 (ELN): Deactivated BESTPRACTICE without accessory file provided (default behaviour created only problems to users).
 
-For bug report/comments: ezequiel.nicolazzi@tecnoparco.org
+For bug report/comments: ezequiel.nicolazzi@ptp.it
 """
 import sys,os,time
 from optparse import OptionParser
@@ -180,25 +181,26 @@ if opt.BEST:
     if opt.Pfile and not os.path.exists(opt.Pfile):bomb('Plate ID accessory file specified: '+opt.Pfile+' not found!')
     animplate={}
     for i in tut:animplate[i]=0
-    if opt.Pfile:     ## IF Plate file is provided, get and retain individuals ID and plate links
-        plates={}
-        temp=[]
-        for line in open(opt.Pfile):
-            if 'cel_files' in line:continue
-            data=line.replace('\t',',')
-            data=data.strip().split(',')
-            if '.CEL' in data[0]:anim=data[0].split('/')[-1].split('.')[0].strip()
-            else:anim=data[0].split('/')[-1].strip()
-            if not animplate.has_key(anim):
-                bomb('Individual: '+anim+' present in PLATE ID accessory file, but not in CEL list file!')
-            pla=data[1].strip()
-            animplate[anim]=pla
-            temp.append(pla)
-        plates=[(i,temp.count(i)) for i in set(temp)]
-    else:             ## IF default behavior, get and retain individuals ID an plate links
-        temp=[tut[i][:-4] for i in range(len(tut))]
-        for en,i in enumerate(tut):animplate[i]=temp[en]
-        plates=[(i,temp.count(i)) for i in set(temp)]
+    if not opt.Pfile: bomb('Plate ID accessory file is required when performing BESTPRACTICE')
+    ## IF Plate file is provided, get and retain individuals ID and plate links
+    plates={}
+    temp=[]
+    for line in open(opt.Pfile):
+        if 'cel_files' in line:continue
+        data=line.replace('\t',',')
+        data=data.strip().split(',')
+        if '.CEL' in data[0]:anim=data[0].split('/')[-1].split('.')[0].strip()
+        else:anim=data[0].split('/')[-1].strip()
+        if not animplate.has_key(anim):
+            bomb('Individual: '+anim+' present in PLATE ID accessory file, but not in CEL list file!')
+        pla=data[1].strip()
+        animplate[anim]=pla
+        temp.append(pla)
+    plates=[(i,temp.count(i)) for i in set(temp)]
+#    else:             ## IF default behavior, get and retain individuals ID an plate links (DEACTIVATED)
+#        temp=[tut[i][:-4] for i in range(len(tut))]
+#        for en,i in enumerate(tut):animplate[i]=temp[en]
+#        plates=[(i,temp.count(i)) for i in set(temp)]
 
 # Print options and params
 logit('-'*81+'\n==> CEL FILE INFORMATION READ \n'+'-'*81)
