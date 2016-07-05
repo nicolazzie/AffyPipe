@@ -1,7 +1,7 @@
 AffyPipe: _an open-source pipeline for Affymetrix Axiom genotyping workflow_
 =========
 ref: E.L. Nicolazzi (Fondazione Parco Tecnologico Padano) - Via Einstein, Loc. Cascina Codazza (26900) Lodi (Italy).
-     email: ezequiel [dot] nicolazzi [at] tecnoparco [dot] org
+     email: ezequielluis [dot] nicolazzi [at] gmail [dot] com
 
 
 ### **What is AffyPipe?**
@@ -188,7 +188,7 @@ A number of files will be present in the OUTPUT folder, and most of them will be
  - **Axiom_genotypes_PLINKfmt.[ped/map] (if requested)**: These files contain all SNP genotypes (choosing best probes for each SNP from "Ps.performance.txt") in PLINK format, recoding genotypes as: 0:'A/A', 1:'A/B', 2:'B/B','-1':'0/0' or their respective alleles if --plinkACGT option is requested.
 
 ### **4) Different species**
-The AffyPipe is intended for all species gentoyped with the Axiom technology, although it was originally built for the specific needs of the International Buffalo Genome Consortium (Iamartino et al.,2013). **Please note that testing has been carried out only on Buffalo + Human Exome 319 and EUR Axiom datasets (GEO platforms: GPL18760 and GPL52691).** Just by setting up the parameter file, you should be successful in using this tool on any other non-tested species. In case of problems, please contact the author of this pipeline at: ezequiel [dot] nicolazzi [at] tecnoparco [dot] org, and he'll be very happy to help you (and integrate the necessary changes in this tool!).
+The AffyPipe is intended for all species gentoyped with the Axiom technology, although it was originally built for the specific needs of the International Buffalo Genome Consortium (Iamartino et al.,2013). **Please note that testing has been carried out only on Buffalo + Human Exome 319 and EUR Axiom datasets (GEO platforms: GPL18760 and GPL52691).** Just by setting up the parameter file, you should be successful in using this tool on any other non-tested species. In case of problems, please contact the author of this pipeline at: ezequielluis [dot] nicolazzi [at] gmail [dot] com, and he'll be very happy to help you (and integrate the necessary changes in this tool!).
  
 ### **5) References**
 
@@ -213,4 +213,4 @@ I personally thank Hernan Morales Durand (IGEVET, Argentina) and GitHub user Hyu
 ### **Disclaimer**
 AffyPipe is a free tool that uses proprietary software that is publicly available online: you can redistribute this pipeline and/or modify this program, but at your own risk. AffyPipe is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details: http://www.gnu.org/licenses/.
 This pipeline is for research and has not a commercial intent, but it can be used freely by any organization. The only goal is to help people streamline their work. Affymetrix is not responsible of any aspect regarding this pipeline. The author of this pipeline is not responsible for ANY output, modification or result obtained from it.
-For bug report, feedback and questions (PLEASE read the carefully this README file before sending your question) contact ezequiel [dot] nicolazzi [at] tecnoparco [dot] org.
+For bug report, feedback and questions (PLEASE read the carefully this README file before sending your question) contact ezequielluis [dot] nicolazzi [at] gmail [dot] com.

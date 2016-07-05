@@ -20,7 +20,7 @@ Changes:
                     Moved control of Annotation file to start of pgm to avoid these issues stopping the program at the end.
    -Jun 2016 (ELN): Deactivated BESTPRACTICE without accessory file provided (default behaviour created only problems to users).
 
-For bug report/comments: ezequiel.nicolazzi@ptp.it
+For bug report/comments: ezequielluis.nicolazzi@gmail.com
 """
 import sys,os,time
 from optparse import OptionParser
@@ -600,7 +600,7 @@ for line in open(Smap):
 out3.close()
 
 if probeset==0:bomb('ANNOTATION file ('+Smap+') seems to be empty!. Please check the file.\n'+\
-                     '            If the file is not empty, please write to ezequiel.nicolazzi@tecnoparco.org')
+                     '            If the file is not empty, please write to ezequielluis.nicolazzi@gmail.com')
 logit("[GOOD NEWS]: Total probe sets read in "+Smap+"\n              (separator found:'"+sep+"' & alleles in position: "+\
                     str(pos_allA+1)+"-"+str(pos_allB+1)+"): "+str(probeset))
 
