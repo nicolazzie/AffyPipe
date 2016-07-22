@@ -5,7 +5,7 @@ ref: E.L. Nicolazzi (Fondazione Parco Tecnologico Padano) - Via Einstein, Loc. C
 
 
 
-<font color=red><b>#### IMPORTANT WARNING FOR AXIOM apt2 USERS</b></font>
+#### IMPORTANT WARNING FOR AXIOM apt2 USERS
 Please note that a new series of library files are being released in many species. Most of these files carry the extention "apt2.xml". Please note AffyPipe will not run with these files. I have tried to contact Affymetrix's DevNet several times now, but their support has not been helpful. At all. I will keep on trying to understand why on earth they keep changing their software, inputs and outputs, and how to make this new software work. Please be patient, as this issue is not due to AffyPipe but for a sudden (and hardly documented) change in Affymetrix software. Please know that the windows GUI software works with these library files, so I'm going to write something I never thought I would: 'If you have a windows computer at hand, please use it. It'll take you less time and mental energy to use the Windows GUI rather than trying to understand how to make the Linux/Mac versions work'.
 
 I am truly sorry, but my hands are tied here.
