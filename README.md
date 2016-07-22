@@ -4,6 +4,18 @@ ref: E.L. Nicolazzi (Fondazione Parco Tecnologico Padano) - Via Einstein, Loc. C
      email: ezequiel [dot] nicolazzi [at] tecnoparco [dot] org
 
 
+
+#### IMPORTANT WARNING FOR AXIOM apt2 USERS
+<font color=red><b>Please note that a new series of library files are being released in many species. Most of these files carry the extention "apt2.xml". Please note AffyPipe will not run with these files. I have tried to contact Affymetrix's DevNet several times now, but their support has not been helpful. At all. I will keep on trying to understand why on earth they keep changing their software, inputs and outputs, and how to make this new software work. Please be patient, as this issue is not due to AffyPipe but for a sudden (and hardly documented) change in Affymetrix software. Please know that the windows GUI software works with these library files, so I'm going to write something I never thought I would: 'If you have a windows computer at hand, please use it. It'll take you less time and mental energy to use the Windows GUI rather than trying to understand how to make the Linux/Mac versions work'.
+
+I am truly sorry, but my hands are tied here.
+
+Hope to get back to you with good news, but for the moment AffyPipe is in the garage.
+
+Ezequiel L. Nicolazzi
+</b></font>
+
+
 ### **What is AffyPipe?**
 The goal of this pipeline is to authomatize Affymetrix's standard and "best practice" genotyping workflows for Linux and Mac users: from Power tools (APTools) to SNPolisher R package.
 This is a one-step tool that combines all Affymetrix software and produces edited and user-friendly format output files. In fact, AffyPipe allows you to edit SNP probe classes directly while exporting genotypes in PLINK format (Purcel et al, 2007).
