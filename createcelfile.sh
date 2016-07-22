@@ -2,7 +2,7 @@
 ### This small bash creates a CEL list file from the current folder, extracting the whole path from pwd.
 ### Coded originally by Ezequiel L. Nicolazzi (Fondazione Parco Tecnologico Padano).
 ### March 2014
-### For comments and bug report: ezequiel.nicolazzi@tecnoparco.org
+### For comments and bug report: ezequielluis.nicolazzi@gmail.com
 ### All rights... naaaaaaaahhh. Just use it and modify at will!
 
 echo;echo "Creating .CEL files list, needed as input file for AffyPipe pipeline"
